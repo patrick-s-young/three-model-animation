@@ -21,7 +21,10 @@ export function Character(onLoadCallback) {
   let animationClips;
   let previousAction;
   let activeAction;
+  const fadeIn = CONFIGS.fadeIn;
+  const clipActions = CONFIGS.clipActions;
   const clipActionsMap = new Map();
+  const scripts = CONFIGS.scripts;
   // DIRECTION
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
   const yRotateQuaternion = new THREE.Quaternion();
@@ -45,30 +48,77 @@ export function Character(onLoadCallback) {
     model.position.set(0, 0, 0);
     mesh.add(model);
     animationMixer = new THREE.AnimationMixer(model);
+    animationMixer.addEventListener('finished', scriptPlayNext);
     animationClips = gltf.animations;
-    animationClips.filter(ac => ac.name !== 'TPose').forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
-    setClipAction(defaultClipAction);
+    animationClips.filter(ac => clipActions.includes(ac.name)).forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
+    scriptPlay('sit');
     if (onLoadCallback !== undefined) onLoadCallback();
   });
 
+  let scriptState;
+
+  function resetScriptState() {
+    scriptState = {
+      scriptName: undefined,
+      clipNames: [],
+      clipIdx: 0,
+      scriptLength: undefined
+    }
+  }
 
 
   /////////////////////////////////////
   // SET ANIMATION, VELOCITY, DIRECTION
-  const setClipAction = (clipActionName) => {
+  const setScriptClipAction = (clipName) => {
+    console.log('play:', clipName)
     previousAction = activeAction;
-    activeAction = clipActionsMap.get(clipActionName);
+    activeAction = clipActionsMap.get(clipName);
+
     // TRANSITION TO NEW CLIP ACTION
     if (previousAction === activeAction) return;
-    if (previousAction !== undefined ) previousAction.fadeOut(.5);
+    if (previousAction !== undefined ) previousAction.stop();
     activeAction
       .reset()
       .setEffectiveTimeScale(1)
       .setEffectiveWeight(1)
-      .fadeIn(.5)
+      .setLoop(THREE.LoopOnce)
+      //.fadeIn(fadeIn)
+      .play();
+  }
+
+  function scriptPlayNext (ev) {
+    if (scriptState.scriptName === undefined) return;
+    const { clipIdx, scriptLength, clipNames } = scriptState;
+    const { clipName, loop } = clipNames[clipIdx];
+    setScriptClipAction(clipName); 
+    scriptState.clipIdx = (clipIdx + 1) % scriptLength;
+  }
+
+  function scriptPlay (scriptName) {
+    scriptState = {
+      scriptName,
+      clipNames: scripts[scriptName],
+      scriptLength: scripts[scriptName].length,
+      clipIdx: 0
+    }
+    scriptPlayNext('initScriptPlay')
+  }
+
+  const setClipAction = (clipActionName) => {
+    if (scriptState.scriptName !== undefined) resetScriptState();
+    previousAction = activeAction;
+    activeAction = clipActionsMap.get(clipActionName);
+    // TRANSITION TO NEW CLIP ACTION
+    if (previousAction === activeAction) return;
+    if (previousAction !== undefined ) previousAction.stop();
+    activeAction
+      .reset()
+      .setEffectiveTimeScale(1)
+      .setEffectiveWeight(1)
+      .setLoop(THREE.LoopOnce)
       .play();
     // SET NEW SPEED
-    if (clipActionName === 'Idle') {
+    if (clipActionName === defaultClipAction) {
       speed = 0;
     } else if (clipActionName === 'Walk') {
       speed = walkingSpeed * speedScaler;
@@ -76,6 +126,7 @@ export function Character(onLoadCallback) {
       speed = runningSpeed * speedScaler;
     }
   }
+
   // SET DIRECTION
   function setDirection (radians) {
     targetRadians = radians;

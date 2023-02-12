@@ -5,15 +5,16 @@ export function Renderer() {
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.xr.enabled = true;
+  //renderer.xr.enabled = true;
 
   return {
-    setReferenceSpaceType: renderer.xr.setReferenceSpaceType,
-    setSession: (session) => renderer.xr.setSession(session),
+    //setReferenceSpaceType: renderer.xr.setReferenceSpaceType,
+    //setSession: (session) => renderer.xr.setSession(session),
     setAnimationLoop: renderer.setAnimationLoop,
     render: (scene, camera) => renderer.render(scene, camera),
+    get domElement() { return renderer.domElement },
     get self() { return renderer },
-    getCamera: renderer.xr.getCamera,
-    getReferenceSpace: renderer.xr.getReferenceSpace
+    //getCamera: renderer.xr.getCamera,
+    //getReferenceSpace: renderer.xr.getReferenceSpace
   }
 }
