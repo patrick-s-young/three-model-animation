@@ -11,9 +11,13 @@ export function Floor() {
     map: texture
   });
 
+  const materialShadow = new THREE.ShadowMaterial();
+  materialShadow.opacity = 0.2;
+
   const geometry = new THREE.PlaneGeometry(100, 100);
-  const mesh = new THREE.Mesh( geometry, material );
-  mesh.rotateX(-Math.PI / 2)
+  const mesh = new THREE.Mesh( geometry, materialShadow );
+  mesh.rotateX(-Math.PI / 2);
+  mesh.receiveShadow = true;
 
 return {
   get mesh() { return mesh }

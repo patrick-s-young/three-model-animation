@@ -44,6 +44,7 @@ export function Character(onLoadCallback) {
 
   gltfLoader.load(assetPath, (gltf) => {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
+    gltf.scene.traverse((node) => { if (node.isMesh) node.castShadow = true });
     const model = gltf.scene;
     model.position.set(0, 0, 0);
     mesh.add(model);
