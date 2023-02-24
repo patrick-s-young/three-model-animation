@@ -70,7 +70,7 @@ export function Character(onLoadCallback) {
 
   /////////////////////////////////////
   // SET ANIMATION, VELOCITY, DIRECTION
-  const setScriptClipAction = (clipName) => {
+  const setScriptClipAction = (clipName, rotate) => {
     console.log('play:', clipName)
     previousAction = activeAction;
     activeAction = clipActionsMap.get(clipName);
@@ -85,12 +85,17 @@ export function Character(onLoadCallback) {
       .setLoop(THREE.LoopOnce)
       //.fadeIn(fadeIn)
       .play();
+      clipStartTime = Date.now();
+
   }
 
+  let rotateFlag = 0;
+  let clipStartTime = 0;
   function scriptPlayNext (ev) {
     if (scriptState.scriptName === undefined) return;
     const { clipIdx, scriptLength, clipNames } = scriptState;
-    const { clipName, loop } = clipNames[clipIdx];
+    const { clipName, loop, rotate } = clipNames[clipIdx];
+    rotateFlag = rotate;
     setScriptClipAction(clipName); 
     scriptState.clipIdx = (clipIdx + 1) % scriptLength;
   }
@@ -130,8 +135,10 @@ export function Character(onLoadCallback) {
 
   // SET DIRECTION
   function setDirection (radians) {
+    console.log('setDirection: radians', radians)
     targetRadians = radians;
     yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
+    mesh.quaternion.copy(yRotateQuaternion)
   }
   // SET POSITION TO HIT TEST RESULTS
   const setMatrixFromArray = (matrixArray) => {
@@ -171,8 +178,17 @@ export function Character(onLoadCallback) {
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
     updateMixer(deltaSeconds);
-    updateRotation();
-    updatePosition();
+    
+    if (rotateFlag !== 0) {
+      const clipTime = Date.now() - clipStartTime;
+      if (clipTime > 1) { 
+        console.log('clipTime', clipTime)
+        setDirection(targetRadians + rotateFlag);
+        rotateFlag = 0;
+      }
+    }
+    //updateRotation();
+    //updatePosition();
   }
 //
 ////////////////////////

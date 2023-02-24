@@ -12,13 +12,14 @@ export const CONFIGS = {
   fadeIn: .5,
   scripts: {
     sit: 
-      [
-        {clipName: 'idle_sit_clean_loop', loop: 1 }, 
-        {clipName: 'sit_to_stand', loop: 1},
-        {clipName: 'idle_stand_loop', loop: 1},
-        {clipName: 'stand_to_sit', loop: 1},
-        {clipName: 'idle_sit_loop', loop: 1}
-      ]
+    [
+      //{clipName: 'sit_to_stand', loop: 1, rotate: 0 },
+      //{clipName: 'turn_left_90', loop: 1, rotate: Math.PI/2 },
+      {clipName: 'turn_right_45', loop: 1, rotate: 0 },
+      {clipName: 'idle_stand_loop', loop: 1, rotate: -Math.PI/4  },
+
+      //{clipName: 'stand_to_sit', loop: 1, rotate: 0 }
+    ]
   },
   clipActions: [
     'crouch_to_stand', 
