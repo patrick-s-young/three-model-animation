@@ -13,6 +13,8 @@ import { Renderer } from './components/Renderer';
 // UI
 import { DirectionControls } from './components/DirectionControls';
 import { ActionControls } from './components/ActionControls';
+// Character & Animation configs
+import { CONFIGS } from './configs';
 // Helpers
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // Styles
@@ -28,7 +30,7 @@ export const App = () => {
   const lights = Lights();
   scene.add(lights.getLights());
   // GLTF
-  const soldier = Character(initActionControls);
+  const soldier = Character(CONFIGS.CHARACTER, CONFIGS.ANIMATION, onCharacterInit);
   scene.add(soldier.mesh);
   // MESH
   const floor = Floor();
@@ -52,25 +54,14 @@ export const App = () => {
   directionControls?.enableTouch();
 
   let actionControls;
-  function initActionControls() {
-    actionControls = ActionControls({
-      uiParent,
-      clipActionsMap: soldier.clipActionsMap, 
-      setClipAction: soldier.setClipAction
-    }) 
-  }
 
-  function initDirectionControls() {
-    directionControls = DirectionControls({
-      uiParent,
-      setDirection: soldier.setDirection,
-      setClipAction: soldier.setClipAction,
-      camera
-    }) 
+
+  function onCharacterInit() {
+    console.log('character initialized');
   }
 
   // RENDER LOOP
-  function animationLoopCallback(timestamp, frame) {
+  function animationLoopCallback(timestamp) {
     const dt = clock.getDelta();
     soldier.update(dt);
     renderer.render(scene.self, camera.self);
