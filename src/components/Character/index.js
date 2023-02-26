@@ -3,6 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
 import { Rotation } from '../Rotation';
+import { Translation } from '../Tanslation';
 
 
 export function Character({ 
@@ -15,11 +16,12 @@ export function Character({
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
   mesh.visible = true;
-  mesh.position.set(0, 0, 0);
   // ANIMATION HANDLER
   let animationMixer;
   // ROTATION HANDLER
   let rotation = Rotation({ mesh, defaultRotation: 0 });
+  // TRANLATIONS HANDLER
+  let translation = Translation({ mesh, defaultPosition: [0, 0, 0] });
 
   gltfLoader.load(assetPath, (gltf) => {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
@@ -32,16 +34,13 @@ export function Character({
     if (onLoadCallback !== undefined) onLoadCallback();
   });
 
-  // SET POSITION TO HIT TEST RESULTS
-  const setMatrixFromArray = (matrixArray) => {
-    mesh.position.set(...matrixArray);
-    mesh.visible = true;
-  }
+
 
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
+    // UPDATE ANIMATION
     animationMixer?.update(deltaSeconds);
-    
+    // CHECK FOR ROTATION
     if (animationMixer?.rotateFlag !== 0) {
       const clipTime = Date.now() - animationMixer?.clipStartTime;
       if (clipTime > 1) { 
@@ -49,6 +48,8 @@ export function Character({
         animationMixer.resetRotateFlag()
       }
     }
+    // CHECK FOR TRANSLATION
+    // if (translation?.moveToPosition !== null)
   }
 
 
@@ -57,7 +58,8 @@ export function Character({
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
+    setPosition: (newPos) => translation.setPosition(newPos),
     update,
-    setMatrixFromArray
+    //setMatrixFromArray
   }
 }

@@ -35,12 +35,6 @@ export const App = () => {
   // MESH
   const floor = Floor();
   scene.add(floor.mesh);
-  // UI
-  // const uiParent = document.createElement('div');
-  // uiParent.style.position = 'absolute';
-  // uiParent.style.visibility = 'hidden';
-  // document.body.appendChild(uiParent);
-  // let directionControls;
   // RENDERER
   const renderer = Renderer();
   document.body.appendChild(renderer.domElement);
@@ -49,12 +43,8 @@ export const App = () => {
   const controls = new OrbitControls(camera.self, renderer.domElement)
   controls.target.set(0, 1, 0);
   controls.update();
+
   renderer.setAnimationLoop(animationLoopCallback);
-  // uiParent.style.visibility = 'visible';
-  // directionControls?.enableTouch();
-
-  // let actionControls;
-
 
   function onCharacterInit() {
     console.log('character initialized');
