@@ -14,7 +14,7 @@ export function Character({
   // MODEL
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
-  mesh.visible = false;
+  mesh.visible = true;
   mesh.position.set(0, 0, 0);
   // ANIMATION HANDLER
   let animationMixer;
@@ -54,13 +54,14 @@ export function Character({
 
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
-    animationMixer.update(deltaSeconds);
+    animationMixer?.update(deltaSeconds);
     
-    if (animationMixer.rotateFlag !== 0) {
-      const clipTime = Date.now() - animationMixer.clipStartTime;
+    if (animationMixer?.rotateFlag !== 0) {
+      console.log('animationMixer?.rotateFlag', animationMixer?.rotateFlag)
+      const clipTime = Date.now() - animationMixer?.clipStartTime;
       if (clipTime > 1) { 
-        setDirection(targetRadians + rotateFlag);
-        animationMixer.rotateFlag = 0;
+        setDirection(targetRadians + animationMixer?.rotateFlag);
+        animationMixer.resetRotateFlag()
       }
     }
   }

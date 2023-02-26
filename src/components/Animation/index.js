@@ -18,17 +18,18 @@ export const Animation = (
   animationClips.filter(ac => clipActions.includes(ac.name)).forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
   animationMixer.addEventListener('finished', scriptPlayNext);
 
-  function resetScriptState() {
+  
+  function scriptPlay (scriptName) {
     scriptState = {
-      scriptName: undefined,
-      clipNames: [],
-      clipIdx: 0,
-      scriptLength: undefined
+      scriptName,
+      clipNames: scripts[scriptName],
+      scriptLength: scripts[scriptName].length,
+      clipIdx: 0
     }
+    scriptPlayNext('initScriptPlay')
   }
 
   const setScriptClipAction = (clipName, rotate) => {
-    console.log('play:', clipName)
     previousAction = activeAction;
     activeAction = clipActionsMap.get(clipName);
 
@@ -55,11 +56,16 @@ export const Animation = (
     scriptState.clipIdx = (clipIdx + 1) % scriptLength;
   }
 
+  const resetRotateFlag = () => rotateFlag = 0;
+
+  const update = (deltaSeconds) => animationMixer.update(deltaSeconds);
+  
   return {
-    clipStartTime,
-    rotateFlag,
+    get clipStartTime() { return clipStartTime },
+    get rotateFlag() { return rotateFlag },
+    resetRotateFlag,
     scriptPlay,
-    update: animationMixer.update
+    update
   }
 
 }

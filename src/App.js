@@ -36,11 +36,11 @@ export const App = () => {
   const floor = Floor();
   scene.add(floor.mesh);
   // UI
-  const uiParent = document.createElement('div');
-  uiParent.style.position = 'absolute';
-  uiParent.style.visibility = 'hidden';
-  document.body.appendChild(uiParent);
-  let directionControls;
+  // const uiParent = document.createElement('div');
+  // uiParent.style.position = 'absolute';
+  // uiParent.style.visibility = 'hidden';
+  // document.body.appendChild(uiParent);
+  // let directionControls;
   // RENDERER
   const renderer = Renderer();
   document.body.appendChild(renderer.domElement);
@@ -50,10 +50,10 @@ export const App = () => {
   controls.target.set(0, 1, 0);
   controls.update();
   renderer.setAnimationLoop(animationLoopCallback);
-  uiParent.style.visibility = 'visible';
-  directionControls?.enableTouch();
+  // uiParent.style.visibility = 'visible';
+  // directionControls?.enableTouch();
 
-  let actionControls;
+  // let actionControls;
 
 
   function onCharacterInit() {

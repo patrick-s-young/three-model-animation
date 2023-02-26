@@ -9,8 +9,13 @@ export const CONFIGS = {
     scripts: {
       idle: 
         [
+          {clipName: 'stand_to_jump_high_ready', loop: 1, rotate: 0 },
+          {clipName: 'idle_jump_high_ready_loop', loop: 1, rotate: 0 },
+          {clipName: 'jump_high', loop: 1, rotate: 0 },
           {clipName: 'turn_right_45', loop: 1, rotate: 0 },
-          {clipName: 'idle_stand_loop', loop: 1, rotate: -Math.PI/4  }
+          {clipName: 'stand_to_sit', loop: 1, rotate: -Math.PI/4  },
+          {clipName: 'idle_sit_clean_loop', loop: 1, rotate: 0 },
+          {clipName: 'sit_to_stand', loop: 1, rotate: 0 }
         ]
     },
     clipActions: [
