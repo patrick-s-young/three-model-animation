@@ -1,7 +1,7 @@
 {
-  "name": "web-ar-boilerplate",
-  "version": "1.0.0",
-  "description": "Web AR project template using webpack, three.js and cannon-es",
+  "name": "three-gltf-animation",
+  "version": "1.0.6",
+  "description": "Three.js module library enabeling scripted animation/interaction with GLTF modal",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
