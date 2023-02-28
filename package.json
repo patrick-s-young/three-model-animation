@@ -1,7 +1,7 @@
 {
   "name": "three-gltf-animation",
   "version": "1.0.6",
-  "description": "Three.js module library enabeling scripted animation/interaction with GLTF modal",
+  "description": "Three.js module library enabling scripted animation/interaction with GLTF modal",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -21,7 +21,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "cannon-es": "^0.20.0",
     "lodash": "^4.17.21",
     "three": "^0.145.0"
   }

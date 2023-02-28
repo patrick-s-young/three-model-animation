@@ -10,9 +10,6 @@ import { Character } from './components/Character';
 import { Floor } from './components/Floor';
 // Renderer
 import { Renderer } from './components/Renderer';
-// UI
-import { DirectionControls } from './components/DirectionControls';
-import { ActionControls } from './components/ActionControls';
 // Character & Animation configs
 import { CONFIGS } from './configs';
 // Helpers
@@ -30,8 +27,8 @@ export const App = () => {
   const lights = Lights();
   scene.add(lights.getLights());
   // GLTF
-  const soldier = Character(CONFIGS.CHARACTER, CONFIGS.ANIMATION, onCharacterInit);
-  scene.add(soldier.mesh);
+  const cat = Character(CONFIGS.CHARACTER, CONFIGS.ANIMATION, onCharacterInit);
+  scene.add(cat.mesh);
   // MESH
   const floor = Floor();
   scene.add(floor.mesh);
@@ -39,7 +36,7 @@ export const App = () => {
   const renderer = Renderer();
   document.body.appendChild(renderer.domElement);
   const clock = new THREE.Clock();
-  // Helpers
+  // ORBIT CONTROLS
   const controls = new OrbitControls(camera.self, renderer.domElement)
   controls.target.set(0, 1, 0);
   controls.update();
@@ -53,7 +50,7 @@ export const App = () => {
   // RENDER LOOP
   function animationLoopCallback(timestamp) {
     const dt = clock.getDelta();
-    soldier.update(dt);
+    cat.update(dt);
     renderer.render(scene.self, camera.self);
   }
 
