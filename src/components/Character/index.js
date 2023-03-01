@@ -30,7 +30,7 @@ export function Character({
     model.position.set(0, 0, 0);
     mesh.add(model);
     animationMixer = Animation(gltf, ANIMATION_CONFIGS);
-    animationMixer.scriptPlay('idle');
+    animationMixer.startNewScript('idle');
     if (onLoadCallback !== undefined) onLoadCallback();
   });
 

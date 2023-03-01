@@ -11,29 +11,34 @@ export const Animation = (
   const clipActionsMap = new Map();
   let previousAction;
   let activeAction;
-  let scriptState;
+  let scriptState = {};
   let rotateFlag = 0;
   let clipStartTime = 0;
 
   animationClips.filter(ac => clipActions.includes(ac.name)).forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
-  animationMixer.addEventListener('finished', scriptPlayNext);
+  animationMixer.addEventListener('finished', clipActionFinished);
 
-  
-  function scriptPlay (scriptName) {
+  // START NEW SCRIPT
+  function startNewScript (scriptName) {
     scriptState = {
       scriptName,
       clipNames: scripts[scriptName],
       scriptLength: scripts[scriptName].length,
       clipIdx: 0
     }
-    scriptPlayNext('initScriptPlay')
+    playNextClipActionInScript();
   }
 
-  const setScriptClipAction = (clipName, rotate) => {
+  function playNextClipActionInScript () {
+    if (scriptState.scriptName === undefined) { console.log('scriptState.scriptName === undefined'); return; }
+    const { clipIdx, clipNames } = scriptState;
+    const { clipName } = clipNames[clipIdx];
+    playClipAction(clipName); 
+  }
+
+  const playClipAction = (clipName) => {
     previousAction = activeAction;
     activeAction = clipActionsMap.get(clipName);
-
-    // TRANSITION TO NEW CLIP ACTION
     if (previousAction === activeAction) return;
     if (previousAction !== undefined ) previousAction.stop();
     activeAction
@@ -41,20 +46,18 @@ export const Animation = (
       .setEffectiveTimeScale(1)
       .setEffectiveWeight(1)
       .setLoop(THREE.LoopOnce)
-      //.fadeIn(fadeIn)
       .play();
       clipStartTime = Date.now();
-
   }
 
-  function scriptPlayNext (ev) {
-    if (scriptState.scriptName === undefined) return;
-    const { clipIdx, scriptLength, clipNames } = scriptState;
+  function clipActionFinished (ev) {
+    const { clipIdx, clipNames, scriptLength } = scriptState;
     const { clipName, loop, rotate } = clipNames[clipIdx];
     rotateFlag = rotate;
-    setScriptClipAction(clipName); 
     scriptState.clipIdx = (clipIdx + 1) % scriptLength;
+    playNextClipActionInScript();
   }
+
 
   const resetRotateFlag = () => rotateFlag = 0;
 
@@ -64,7 +67,8 @@ export const Animation = (
     get clipStartTime() { return clipStartTime },
     get rotateFlag() { return rotateFlag },
     resetRotateFlag,
-    scriptPlay,
+    startNewScript,
+    playClipAction,
     update
   }
 
