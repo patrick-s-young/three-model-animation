@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 export const Rotation = ({ mesh, defaultRotation }) => {
   let yRotation = defaultRotation;
+  
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
   const yRotateQuaternion = new THREE.Quaternion();
   rotateY(yRotation);
@@ -16,6 +17,7 @@ export const Rotation = ({ mesh, defaultRotation }) => {
   }
 
   return {
-    set y(radians) { rotateY(radians) }
+    set y(radians) { rotateY(radians) },
+    get y() { return yRotation }
   }
 }

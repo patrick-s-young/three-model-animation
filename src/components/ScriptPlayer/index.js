@@ -2,12 +2,14 @@
 
 export const ScriptPlayer = ({
   animationMixer,
-  scripts 
+  configs: { scripts, defaultScript }, 
 }) => {
   let scriptState = {};
   let rotateFlag = 0;
+  let translateFlag = 0;
 
-  animationMixer.setAnimationMixerFinishedCallback(clipActionFinished)
+  animationMixer.setAnimationMixerFinishedCallback(clipActionFinished);
+  startNewScript(defaultScript);
   // START NEW SCRIPT
   function startNewScript (scriptName) {
     scriptState = {
@@ -28,17 +30,21 @@ export const ScriptPlayer = ({
 
   function clipActionFinished (ev) {
     const { clipIdx, clipNames, scriptLength } = scriptState;
-    const { clipName, loop, rotate } = clipNames[clipIdx];
-    rotateFlag = rotate;
+    const { rotate, translate } = clipNames[clipIdx];
+    rotateFlag = rotate ?? 0;
+    translateFlag = translate ?? 0;
     scriptState.clipIdx = (clipIdx + 1) % scriptLength;
     playNextClipActionInScript();
   }
 
   const resetRotateFlag = () => rotateFlag = 0;
+  const resetTranslateFlag = () => translateFlag = 0;
 
   return {
     get rotateFlag() { return rotateFlag },
+    get translateFlag() { return translateFlag },
     startNewScript,
-    resetRotateFlag
+    resetRotateFlag,
+    resetTranslateFlag
   }
 }

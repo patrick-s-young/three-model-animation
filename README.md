@@ -1,6 +1,6 @@
 # three-gltf-animation
 Three.js module library enabling scripted animation/interaction with GLTF modal.
-
+![three-gltf-animation_640x512_24fps](https://user-images.githubusercontent.com/42591798/222059278-ba36a4ad-53a7-40db-a76f-1ea1188558cf.gif)
 
 ## Running Locally
 
