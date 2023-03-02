@@ -1,4 +1,5 @@
-
+const walk_loop = 2.6; 
+const stand_to_walk = 2;
 export const CONFIGS = {
   CHARACTER: {
     name: 'cat',
@@ -6,16 +7,31 @@ export const CONFIGS = {
     meshScaler: 10
   },
   ANIMATION: {
+    defaultScript: 'walkBackAndForth',
     scripts: {
+      walkBackAndForth: 
+        [
+          {clipName: 'turn_right_90', rotate: -Math.PI/2 },
+          {clipName: 'stand_to_walk', translate: stand_to_walk },
+          {clipName: 'walk_loop', translate: walk_loop },
+          {clipName: 'walk_to_stand' },
+        ],
       idle: 
         [
-          {clipName: 'stand_to_jump_high_ready', loop: 1, rotate: 0 },
-          {clipName: 'idle_jump_high_ready_loop', loop: 1, rotate: 0 },
-          {clipName: 'jump_high', loop: 1, rotate: 0 },
-          {clipName: 'turn_right_45', loop: 1, rotate: -Math.PI/4  },
-          {clipName: 'stand_to_sit', loop: 1, rotate: 0 },
-          {clipName: 'idle_sit_clean_loop', loop: 1, rotate: 0 },
-          {clipName: 'sit_to_stand', loop: 1, rotate: 0 }
+          {clipName: 'stand_to_sit', rotate: 0 },
+          {clipName: 'idle_sit_clean_loop', rotate: 0 },
+          {clipName: 'sit_to_stand', rotate: 0 },
+          {clipName: 'idle_stand_clean_loop', rotate: 0 }
+        ],
+      jump:
+        [
+          {clipName: 'stand_to_jump_high_ready', rotate: 0 },
+          {clipName: 'idle_jump_high_ready_loop', rotate: 0 },
+          {clipName: 'jump_high', rotate: 0 },
+          {clipName: 'turn_right_45', rotate: -Math.PI/4 },
+          {clipName: 'stand_to_sit', rotate: 0 },
+          {clipName: 'idle_sit_clean_loop', rotate: 0 },
+          {clipName: 'sit_to_stand', rotate: 0 }
         ]
     },
     clipActions: [

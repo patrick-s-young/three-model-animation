@@ -12,8 +12,9 @@ export function Character({
   meshScaler }, 
   ANIMATION_CONFIGS,
   onLoadCallback) {
-  // MESH
+  // LOADER
   const gltfLoader = new GLTFLoader();
+  // MESH
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
   mesh.visible = true;
@@ -26,19 +27,18 @@ export function Character({
   // SCRIPT PLAYER
   let scriptPlayer;
 
-  gltfLoader.load(assetPath, (gltf) => {
+  gltfLoader.load(assetPath, onGltfLoaded);
+
+  function onGltfLoaded (gltf) {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
     gltf.scene.traverse((node) => { if (node.isMesh) node.castShadow = true });
     const model = gltf.scene;
     model.position.set(0, 0, 0);
     mesh.add(model);
     animationMixer = Animation({ gltf, clipActions: ANIMATION_CONFIGS.clipActions });
-    scriptPlayer = ScriptPlayer({ animationMixer, scripts: ANIMATION_CONFIGS.scripts });
-    scriptPlayer.startNewScript('idle');
+    scriptPlayer = ScriptPlayer({ animationMixer, configs: ANIMATION_CONFIGS });
     if (onLoadCallback !== undefined) onLoadCallback();
-  });
-
-
+  }
 
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
@@ -48,12 +48,18 @@ export function Character({
     if (scriptPlayer?.rotateFlag !== 0) {
       const clipTime = Date.now() - animationMixer?.clipStartTime;
       if (clipTime > 1) { 
-        rotation.y = scriptPlayer?.rotateFlag;
+        rotation.y = scriptPlayer.rotateFlag;
         scriptPlayer.resetRotateFlag()
       }
     }
     // CHECK FOR TRANSLATION
-    // if (translation?.moveToPosition !== null)
+    if (scriptPlayer?.translateFlag !== 0) {
+      const clipTime = Date.now() - animationMixer?.clipStartTime;
+      if (clipTime > 1) { 
+        translation.setXZPosition({ distance: scriptPlayer.translateFlag, yRotation: rotation.y });
+        scriptPlayer.resetTranslateFlag();
+      }
+    }
   }
 
 
@@ -62,7 +68,6 @@ export function Character({
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
-    setPosition: (newPos) => translation.setPosition(newPos),
     update
   }
 }

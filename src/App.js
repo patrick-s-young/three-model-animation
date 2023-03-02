@@ -38,7 +38,7 @@ export const App = () => {
   const clock = new THREE.Clock();
   // ORBIT CONTROLS
   const controls = new OrbitControls(camera.self, renderer.domElement)
-  controls.target.set(0, 1, 0);
+  controls.target.set(0, 0, 0);
   controls.update();
 
   renderer.setAnimationLoop(animationLoopCallback);

@@ -24,8 +24,6 @@ export const Animation = ({
   const playClipAction = (clipName) => {
     previousAction = activeAction;
     activeAction = clipActionsMap.get(clipName);
-    if (previousAction === activeAction) return;
-    if (previousAction !== undefined ) previousAction.stop();
     activeAction
       .reset()
       .setEffectiveTimeScale(1)
@@ -33,6 +31,7 @@ export const Animation = ({
       .setLoop(THREE.LoopOnce)
       .play();
       clipStartTime = Date.now();
+      previousAction?.stop();
   }
 
 
