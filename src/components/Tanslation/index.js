@@ -17,8 +17,8 @@ export const Translation = ({ mesh, defaultPosition }) => {
   const setXZPosition = ({ distance, yRotation }) => {
     const xDirection= Math.sin(-yRotation);
     const zDirection = Math.cos(yRotation);
-    mesh.position.x += xDirection * distance * -1;
-    mesh.position.z += zDirection * distance;
+    mesh.position.x += xDirection * distance;
+    mesh.position.z += zDirection * distance * -1;
   }
 
   return {
