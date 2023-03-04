@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../Animation';
 import { Rotation } from '../Rotation';
@@ -14,6 +15,7 @@ export function Character({
   onLoadCallback) {
   // LOADER
   const gltfLoader = new GLTFLoader();
+  const fbxLoader = new FBXLoader();
   // MESH
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
@@ -27,7 +29,18 @@ export function Character({
   // SCRIPT PLAYER
   let scriptPlayer;
 
-  gltfLoader.load(assetPath, onGltfLoaded);
+  //gltfLoader.load(assetPath, onGltfLoaded);
+
+  fbxLoader.load(assetPath, (object) => {
+    object.scale.multiplyScalar(0.1)
+    object.traverse((node) => { if (node.isMesh) node.castShadow = true });
+    object.position.set(0, 0, 0);
+    mesh.add(object);
+    console.log('object', object)
+    animationMixer = Animation({ object, clipActions: ANIMATION_CONFIGS.clipActions });
+    scriptPlayer = ScriptPlayer({ animationMixer, configs: ANIMATION_CONFIGS });
+    if (onLoadCallback !== undefined) onLoadCallback();
+  })
 
   function onGltfLoaded (gltf) {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);

@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 
 export const Animation = ({
-  gltf,
+  object,
   clipActions
   }) => {
-  const animationMixer = new THREE.AnimationMixer(gltf.scene);
-  const animationClips = gltf.animations;
+  const animationMixer = new THREE.AnimationMixer(object);
+  const animationClips = object.animations;
   const clipActionsMap = new Map();
   let previousAction;
   let activeAction;
