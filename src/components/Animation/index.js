@@ -6,14 +6,21 @@ export const Animation = ({
   clipActions
   }) => {
   const animationMixer = new THREE.AnimationMixer(object);
-  const animationClips = object.animations;
   const clipActionsMap = new Map();
   let previousAction;
   let activeAction;
   let clipStartTime = 0;
   let animationMixerFinishedCallback;
 
-  animationClips.filter(ac => clipActions.includes(ac.name)).forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
+  // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
+  object.animations.forEach(animObj => {
+    clipActions.forEach(actionName => {
+      if (animObj.name.indexOf(actionName) !== -1) {
+        clipActionsMap.set(actionName, animationMixer.clipAction(animObj));
+        // todo: removed matched clipActions from array
+      }
+    });
+  });
 
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
