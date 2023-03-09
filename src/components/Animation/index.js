@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 export const Animation = ({
   object,
-  clipActions
+  clipNames
   }) => {
   const animationMixer = new THREE.AnimationMixer(object);
   const clipActionsMap = new Map();
@@ -14,14 +14,13 @@ export const Animation = ({
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
   object.animations.forEach(animObj => {
-    clipActions.forEach(actionName => {
+    clipNames.forEach(actionName => {
       if (animObj.name.indexOf(actionName) !== -1) {
         clipActionsMap.set(actionName, animationMixer.clipAction(animObj));
-        // todo: removed matched clipActions from array
       }
     });
   });
-
+  
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
     animationMixer.addEventListener('finished', newAnimationMixerFinishedCallback);
