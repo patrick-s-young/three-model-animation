@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../Animation';
@@ -14,7 +13,6 @@ export function Character({
   ANIMATION_CONFIGS,
   onLoadCallback) {
   // LOADER
-  const gltfLoader = new GLTFLoader();
   const fbxLoader = new FBXLoader();
   // MESH
   const mesh = new THREE.Group();
@@ -29,29 +27,20 @@ export function Character({
   // SCRIPT PLAYER
   let scriptPlayer;
 
-  //gltfLoader.load(assetPath, onGltfLoaded);
+  
 
   fbxLoader.load(assetPath, (object) => {
-    object.scale.multiplyScalar(0.1)
+    object.scale.multiplyScalar(meshScaler)
     object.traverse((node) => { if (node.isMesh) node.castShadow = true });
     object.position.set(0, 0, 0);
     mesh.add(object);
     console.log('object', object)
-    animationMixer = Animation({ object, clipActions: ANIMATION_CONFIGS.clipActions });
+    animationMixer = Animation({ object, clipNames: ANIMATION_CONFIGS.clipNames });
     scriptPlayer = ScriptPlayer({ animationMixer, configs: ANIMATION_CONFIGS });
     if (onLoadCallback !== undefined) onLoadCallback();
   })
 
-  function onGltfLoaded (gltf) {
-    gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
-    gltf.scene.traverse((node) => { if (node.isMesh) node.castShadow = true });
-    const model = gltf.scene;
-    model.position.set(0, 0, 0);
-    mesh.add(model);
-    animationMixer = Animation({ gltf, clipActions: ANIMATION_CONFIGS.clipActions });
-    scriptPlayer = ScriptPlayer({ animationMixer, configs: ANIMATION_CONFIGS });
-    if (onLoadCallback !== undefined) onLoadCallback();
-  }
+
 
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;

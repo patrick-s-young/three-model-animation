@@ -10,6 +10,8 @@ export const ScriptPlayer = ({
 
   animationMixer.setAnimationMixerFinishedCallback(clipActionFinished);
   startNewScript(defaultScript);
+
+
   // START NEW SCRIPT
   function startNewScript (scriptName) {
     scriptState = {

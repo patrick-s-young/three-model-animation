@@ -3,72 +3,103 @@ const stand_to_walk = 2;
 export const CONFIGS = {
   CHARACTER: {
     name: 'cat',
-    assetPath: '/models/cat_model_z_forward_2023.03.08.fbx',
-    meshScaler: .5
+    assetPath: '/models/cat_model_2023.03.09.fbx',
+    meshScaler: 0.1
   },
   ANIMATION: {
-    defaultScript: 'walkBackAndForth',
+    defaultScript: 'sit_and_clean',
     scripts: {
-      walkBackAndForth: 
+      turn_left: 
         [
-          {clipName: 'turn_right_90', rotate: -Math.PI/2 },
-          {clipName: 'stand_to_walk', translate: stand_to_walk },
-          {clipName: 'walk_loop', translate: walk_loop },
-          {clipName: 'walk_to_stand' },
+          {clipName: 'turn_left_90', rotate: Math.PI/2 },
+          {clipName: 'idle_stand_loop', translate: stand_to_walk },
         ],
-      idle: 
+      sit_and_clean: 
         [
-          {clipName: 'stand_to_sit', rotate: 0 },
-          {clipName: 'idle_sit_clean_loop', rotate: 0 },
-          {clipName: 'sit_to_stand', rotate: 0 },
-          {clipName: 'idle_stand_clean_loop', rotate: 0 }
-        ],
-      jump:
-        [
-          {clipName: 'stand_to_jump_high_ready', rotate: 0 },
-          {clipName: 'idle_jump_high_ready_loop', rotate: 0 },
-          {clipName: 'jump_high', rotate: 0 },
-          {clipName: 'turn_right_45', rotate: -Math.PI/4 },
           {clipName: 'stand_to_sit', rotate: 0 },
           {clipName: 'idle_sit_clean_loop', rotate: 0 },
           {clipName: 'sit_to_stand', rotate: 0 }
-        ]
+        ],
+      jump_high:
+        [
+          {clipName: 'stand_to_jump_high_ready' },
+          {clipName: 'jump_2' }
+        ],
     },
-   
-    clipActions: [
-      'turn_left_45',
+    clipNames: [
+      'sneak_loop',
+      'push_loop',
+      'pull_loop',
+      
+      ///////////////////
+      // CROUCH TO CROUCH
+      'idle_crouch_loop',
+      // CROUCH TO STAND
       'crouch_to_stand', 
-      'run_loop', 
-      'idle_crouch_loop', 
+
+      ///////////////////////////
+      // JUMP_READY TO JUMP_READY
       'idle_jump_high_ready_loop',
+
+      //////////////////////
+      // JUMP_READY TO STAND
+      'jump_1',
+      'jump_2',
+
+      /////////////
+      // LAY TO LAY
       'idle_lay_down_loop',
+
+      //////////////
+      // RUN TO RUN
+      'run_loop', 
+
+      /////////////
+      // SIT TO SIT
       'idle_sit_loop',
       'idle_sit_clean_loop',
+      // SIT TO STAND
+      'sit_to_stand',
+
+      ////////////////
+      // SLEEP TO SLEEP
       'idle_sleep_loop',
+
+      //////////////////
+      // STAND TO CROUCH
+      'stand_to_crouch',
+      // STAND TO JUMP_READY
+      'stand_to_jump_high_ready',
+      // STAND TO RUN
+      'stand_to_run', // need 'run_to_stand'
+      // STAND TO SIT
+      'stand_to_sit',
+      // STAND TO STAND
+      'attack_loop',
       'idle_stand_loop',
       'idle_stand_clean_loop',
-      'jump',
-      'jump_high',
-      'sit_to_stand',
-      'stand_to_crouch',
-      'stand_to_run',
-      'stand_to_jump_high_ready',
-      'stand_to_sit',
-      'walk_to_trot',
-      'stand_to_walk',
       'turn_left_180',
       'turn_left_90',
       'turn_right_45',
       'turn_right_90',
       'turn_right_180',
-      'attack_loop',
-      'trot_loop',
-      'walk_loop',
-      'walk_to_stand',
+      'turn_left_45',
+      // STAND TO TROT
       'stand_to_trot',
-      'sneak_loop',
-      'push_loop',
-      'pull_loop'
+      // STAND TO WALK
+      'stand_to_walk',
+
+      ///////////////
+      // TROT TO TROT
+      'trot_loop',
+
+      /////////////////
+      // WALK TO STAND
+      'walk_to_stand',
+      // WALK TO TROT
+      'walk_to_trot', // need 'trot_to_walk', 'trot_to_stand'
+      // WALK TO WALK
+      'walk_loop',
     ]
   }
 }
