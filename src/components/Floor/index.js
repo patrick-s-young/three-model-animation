@@ -15,7 +15,7 @@ export function Floor() {
   materialShadow.opacity = 0.2;
 
   const geometry = new THREE.PlaneGeometry(100, 100);
-  const mesh = new THREE.Mesh( geometry, materialShadow );
+  const mesh = new THREE.Mesh( geometry, material );
   mesh.rotateX(-Math.PI / 2);
   mesh.receiveShadow = true;
 

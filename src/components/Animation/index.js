@@ -9,6 +9,7 @@ export const Animation = ({
   const clipActionsMap = new Map();
   let previousAction;
   let activeAction;
+  let activeLoop;
   let clipStartTime = 0;
   let animationMixerFinishedCallback;
 
@@ -21,6 +22,7 @@ export const Animation = ({
     });
   });
   
+  console.log('clipActionsMap:', clipActionsMap)
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
     animationMixer.addEventListener('finished', newAnimationMixerFinishedCallback);
@@ -28,7 +30,7 @@ export const Animation = ({
   }
 
   const playClipAction = (clipName) => {
-    previousAction = activeAction;
+    previousAction?.stop();
     activeAction = clipActionsMap.get(clipName);
     activeAction
       .reset()
@@ -37,7 +39,7 @@ export const Animation = ({
       .setLoop(THREE.LoopOnce)
       .play();
       clipStartTime = Date.now();
-      previousAction?.stop();
+    previousAction = activeAction;
   }
 
 

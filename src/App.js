@@ -11,7 +11,7 @@ import { Floor } from './components/Floor';
 // Renderer
 import { Renderer } from './components/Renderer';
 // Character & Animation configs
-import { CONFIGS } from './configs';
+import { CONFIGS } from './configs/configs';
 // Helpers
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // Styles
