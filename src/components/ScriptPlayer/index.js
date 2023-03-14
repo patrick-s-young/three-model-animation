@@ -7,6 +7,10 @@ export const ScriptPlayer = ({
   let scriptState = {};
   let rotateFlag = 0;
   let translateFlag = 0;
+  let loopTranslateState = 0; // 1 - start, 2 - active, - 0 inactive
+  let mps = 0;
+  let timelineFlag = 0; // 1: start, 2: active, 0: inactive
+  let timeline;
 
   animationMixer.setAnimationMixerFinishedCallback(clipActionFinished);
   startNewScript(defaultScript);
@@ -25,8 +29,21 @@ export const ScriptPlayer = ({
 
   function playNextClipActionInScript () {
     if (scriptState.scriptName === undefined) { console.log('scriptState.scriptName === undefined'); return; }
+    loopTranslateState = 0;
+    mps = 0;
+    timelineFlag = 0;
+    timeline = undefined
+
     const { clipIdx, clipNames } = scriptState;
-    const { clipName } = clipNames[clipIdx];
+    const { clipName, metersPerSecond, timeline: newTimeline } = clipNames[clipIdx];
+    if (metersPerSecond !== undefined) {
+      loopTranslateState = 1;
+      mps = metersPerSecond;
+    } 
+    if (newTimeline !== undefined) {
+      timeline = newTimeline;
+      timelineFlag = 1;
+    }
     animationMixer.playClipAction(clipName); 
   }
 
@@ -41,12 +58,22 @@ export const ScriptPlayer = ({
 
   const resetRotateFlag = () => rotateFlag = 0;
   const resetTranslateFlag = () => translateFlag = 0;
+  const resetTimelineFlag = () => timelineFlag = 0;
+
+  const startTimeline = () => {
+    timelineFlag = 2;
+  }
 
   return {
     get rotateFlag() { return rotateFlag },
     get translateFlag() { return translateFlag },
-    startNewScript,
+    get timelineFlag() { return timelineFlag },
+    startTimeline,
+    get updateLoop() { return loopTranslateState === 2},
+    get mps() { return mps },
+    get timeline() { return timeline },
     resetRotateFlag,
-    resetTranslateFlag
+    resetTranslateFlag,
+    resetTimelineFlag
   }
 }

@@ -4,6 +4,8 @@ export const Translation = ({ mesh, defaultPosition }) => {
   let xPos;
   let yPos;
   let zPos;
+  let mps = 0;
+  let prevMsec;
 
   setPosition(...defaultPosition);
 
@@ -21,8 +23,27 @@ export const Translation = ({ mesh, defaultPosition }) => {
     mesh.position.z += zDirection * distance * -1;
   }
 
+  const setLoop = (metersPerSecond) => {
+    mps = metersPerSecond;
+    prevMsec = Date.now();
+  }
+
+
+  const updateLoop = ({ yRotation }) => {
+    const elapsedMsec = Date.now() - prevMsec;
+    const xDirection = Math.sin(-yRotation);
+    const zDirection = Math.cos(yRotation);
+    prevMsec += elapsedMsec;
+    mesh.position.x += xDirection * elapsedMsec / 1000 * mps;
+    mesh.position.z += zDirection * elapsedMsec / 1000 * mps * -1;
+  }
+
+
   return {
     setPosition,
-    setXZPosition
+    setXZPosition,
+    setLoop,
+    updateLoop,
+    get active() { return mps !== 0 }
   }
 }
