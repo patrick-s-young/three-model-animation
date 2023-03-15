@@ -1,5 +1,5 @@
-# three-gltf-animation
-Three.js module library enabling scripted animation/interaction with GLTF modal.
+# three-model-animation
+Three.js system for FBX model animation and interaction.
 ![three-gltf-animation_640x512_24fps](https://user-images.githubusercontent.com/42591798/222059278-ba36a4ad-53a7-40db-a76f-1ea1188558cf.gif)
 
 ## Running Locally
@@ -7,8 +7,8 @@ Three.js module library enabling scripted animation/interaction with GLTF modal.
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
 ```sh
-git clone https://github.com/patrick-s-young/three-gltf-animation.git # or clone your own fork
-cd three-gltf-animation
+git clone https://github.com/patrick-s-young/three-model-animation.git # or clone your own fork
+cd three-model-animation
 npm install
 npm start
 ```
