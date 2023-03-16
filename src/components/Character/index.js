@@ -1,10 +1,10 @@
+// THREE
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../Animation';
 import { Rotation } from '../Rotation';
-import { Translation } from '../Tanslation';
-import { TranslationLoop } from '../TranslationLoop';
+import { Translation } from '../Translation';
 import { ScriptPlayer } from '../ScriptPlayer';
 
 
@@ -23,14 +23,13 @@ export function Character({
   let animationMixer;
   // ROTATION HANDLER
   let rotation = Rotation({ mesh, defaultRotation: 0 });
-  // TRANSLATION HANDLERS
-  let translation = Translation({ mesh, defaultPosition: [0, 0, 0] });
-  let translationLoop = TranslationLoop({ mesh });
+  // TRANSLATION HANDLER
+  let translation = Translation({ mesh });
   // SCRIPT PLAYER
   let scriptPlayer;
 
   
-
+  // LOAD MODEL
   fbxLoader.load(assetPath, (object) => {
     object.scale.multiplyScalar(meshScaler)
     object.traverse((node) => { if (node.isMesh) node.castShadow = true });
@@ -43,12 +42,12 @@ export function Character({
   })
 
 
-
+  // CHARACTER ANIMATION LOOP
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
-    // UPDATE ANIMATION
+    // UPDATE MIXER
     animationMixer?.update(deltaSeconds);
-    // CHECK FOR ROTATION
+    // UPDATE ROTATION
     if (scriptPlayer?.rotateFlag !== 0) {
       const clipTime = Date.now() - animationMixer?.clipStartTime;
       if (clipTime > 1) { 
@@ -56,16 +55,13 @@ export function Character({
         scriptPlayer.resetRotateFlag()
       }
     }
-    // CHECK FOR TRANSLATION
+    // CHECK FOR NEW TRANSLATION TRACKS
     if (scriptPlayer?.timelineFlag === 1) {
-      const clipTime = Date.now() - animationMixer?.clipStartTime;
-      if (clipTime > 1) { 
-        translationLoop.setTimeline(scriptPlayer.timeline);
+        translation.setTimeline(scriptPlayer.timeline);
         scriptPlayer.startTimeline();
-      }
     }
-
-    if (scriptPlayer?.timelineFlag === 2) translationLoop.update({ yRotation: rotation.y })
+    // UPDATE TRANSLATION
+    if (scriptPlayer?.timelineFlag === 2) translation.update({ yRotation: rotation.y })
   }
 
 

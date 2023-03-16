@@ -1,7 +1,7 @@
 {
-  "name": "three-gltf-animation",
-  "version": "1.0.6",
-  "description": "Three.js module library enabling scripted animation/interaction with GLTF modal",
+  "name": "three-modal-animation",
+  "version": "1.0.7",
+  "description": "Three.js system for FBX model animation and interaction.",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
