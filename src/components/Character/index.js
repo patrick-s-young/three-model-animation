@@ -20,7 +20,7 @@ export function Character({
   mesh.matrixAutoUpdate = true;
   mesh.visible = true;
   // ANIMATION HANDLER
-  let animationMixer;
+  let animation;
   // ROTATION HANDLER
   let rotation = Rotation({ mesh, defaultRotation: 0 });
   // TRANSLATION HANDLER
@@ -36,8 +36,11 @@ export function Character({
     object.position.set(0, 0, 0);
     mesh.add(object);
     console.log('object', object)
-    animationMixer = Animation({ object, clipNames: ANIMATION_CONFIGS.clipNames });
-    scriptPlayer = ScriptPlayer({ animationMixer, configs: ANIMATION_CONFIGS });
+    animation = Animation({ mesh, object, clipNames: ANIMATION_CONFIGS.clipNames });
+    scriptPlayer = ScriptPlayer({ 
+      object, 
+      animation: animation,
+      configs: ANIMATION_CONFIGS });
     if (onLoadCallback !== undefined) onLoadCallback();
   })
 
@@ -46,10 +49,10 @@ export function Character({
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
     // UPDATE MIXER
-    animationMixer?.update(deltaSeconds);
+    animation?.update({ deltaSeconds, yRotation: rotation.y});
     // UPDATE ROTATION
     if (scriptPlayer?.rotateFlag !== 0) {
-      const clipTime = Date.now() - animationMixer?.clipStartTime;
+      const clipTime = Date.now() - animation?.clipStartTime;
       if (clipTime > 1) { 
         rotation.y = scriptPlayer.rotateFlag;
         scriptPlayer.resetRotateFlag()

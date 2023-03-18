@@ -27,13 +27,20 @@ export const CONFIGS = {
           {clipName: 'stand_to_jump_high_ready' },
           {clipName: 'jump_2' }
         ],
-      test: [
+      test_: [
         {clipName: 'turn_right_90', rotate: -Math.PI/2 },
         {clipName: 'stand_to_walk_treadmill', timeline: timelines.stand_to_walk_treadmill },
         {clipName: 'walk_loop_treadmill', timeline: timelines.walk_loop_treadmill },
         {clipName: 'walk_to_stand_treadmill', timeline: timelines.walk_to_stand_treadmill }
+      ],
+      test: [
+        {clipName: 'walk_loop_treadmill', timeline: timelines.walk_loop_treadmill },
+        {clipName: 'walk_loop' }
       ]
     },
+    clipTracks: [
+      { clipName: 'walk_loop', positionTrackName: 'TrajectorySHJnt.position' }
+    ],
     clipNames: [
       // 'sneak_loop',
       // 'push_loop',
