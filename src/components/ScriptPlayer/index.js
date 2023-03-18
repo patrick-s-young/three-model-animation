@@ -1,17 +1,17 @@
 
 
 export const ScriptPlayer = ({
-  animationMixer,
-  configs: { scripts, defaultScript }, 
+  animation,
+  configs: { scripts, defaultScript },
 }) => {
   let scriptState = {};
   let rotateFlag = 0;
   let timelineFlag = 0; // 1: start, 2: active, 0: inactive
   let timeline;
-
-  animationMixer.setAnimationMixerFinishedCallback(clipActionFinished);
+ 
+  // create positionMap
+  animation.setAnimationMixerFinishedCallback(clipActionFinished);
   startNewScript(defaultScript);
-
 
   // START NEW SCRIPT
   function startNewScript (scriptName) {
@@ -28,14 +28,13 @@ export const ScriptPlayer = ({
     if (scriptState.scriptName === undefined) { console.log('scriptState.scriptName === undefined'); return; }
     timelineFlag = 0;
     timeline = undefined
-
     const { clipIdx, clipNames } = scriptState;
     const { clipName, timeline: newTimeline } = clipNames[clipIdx];
     if (newTimeline !== undefined) {
       timeline = newTimeline;
       timelineFlag = 1;
     }
-    animationMixer.playClipAction(clipName); 
+    animation.playClipAction(clipName); 
   }
 
   function clipActionFinished (ev) {
