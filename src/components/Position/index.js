@@ -1,18 +1,25 @@
 
 
 export const Position = ({ mesh }) => {
-  let timeline;
+ // let timeline;
   let accumulatedDistance
-  let idx = 0;
   let idxLimit;
   let startAnimationTime;
   let times;
   let values;
+  let positionMap;
+  const positionCache = {};
   
 
+  const initTracks = (map) => {
+    positionMap = map;
+
+  }
+
 // INITIALIZE TRACKS
-  const setTrack = (track) => {
-    console.log('setTrack', track)
+  const playTrack = (trackName) => {
+    if (positionMap.has(trackName) === false) return;
+    const track = positionMap.get(trackName);
     times = track.times;
     values = track.values;
     startAnimationTime = Date.now();
@@ -22,10 +29,10 @@ export const Position = ({ mesh }) => {
 
 // TODO - cache timeDiff
   const update = ({ yRotation }) => {
-    console.log('position.update')
+  //  console.log('position.update')
     const timeOffset = (Date.now() - startAnimationTime) * 0.001;
-    console.log('timeOffset', timeOffset)
-    for (idx = 0; idx < idxLimit; idx++) {
+   // console.log('timeOffset', timeOffset)
+    for (let idx = 0; idx < idxLimit; idx++) {
       if (times[idx] < timeOffset && times[idx + 1] > timeOffset) {
         const minTime = times[idx];
         const maxTime = times[idx + 1];
@@ -53,6 +60,7 @@ export const Position = ({ mesh }) => {
 
   return {
     update,
-    setTrack
+    playTrack,
+    initTracks
   }
 }
