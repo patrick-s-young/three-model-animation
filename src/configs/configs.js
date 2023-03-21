@@ -1,6 +1,3 @@
-import { timelines } from "./timelines";
-
-
 const meshScaler = 0.1;
 export const CONFIGS = {
   CHARACTER: {
@@ -27,14 +24,7 @@ export const CONFIGS = {
           {clipName: 'stand_to_jump_high_ready' },
           {clipName: 'jump_2' }
         ],
-      test_: [
-        {clipName: 'turn_right_90', rotate: -Math.PI/2 },
-        {clipName: 'stand_to_walk_treadmill', timeline: timelines.stand_to_walk_treadmill },
-        {clipName: 'walk_loop_treadmill', timeline: timelines.walk_loop_treadmill },
-        {clipName: 'walk_to_stand_treadmill', timeline: timelines.walk_to_stand_treadmill }
-      ],
       test: [
-        {clipName: 'walk_loop_treadmill', timeline: timelines.walk_loop_treadmill },
         {clipName: 'walk_loop' }
       ]
     },
@@ -102,8 +92,8 @@ export const CONFIGS = {
       // STAND TO TROT
      // 'stand_to_trot',
       // STAND TO WALK
-      'stand_to_walk_timeline',
-      'stand_to_walk_treadmill',
+      'stand_to_walk',
+
 
       ///////////////
       // TROT TO TROT
@@ -112,12 +102,10 @@ export const CONFIGS = {
       /////////////////
       // WALK TO STAND
       'walk_to_stand',
-      'walk_to_stand_treadmill',
       // WALK TO TROT
      // 'walk_to_trot', // need 'trot_to_walk', 'trot_to_stand'
       // WALK TO WALK
       'walk_loop',
-      'walk_loop_treadmill'
     ]
   }
 }

@@ -8,9 +8,7 @@ export const Animation = ({
   }) => {
   const animationMixer = new THREE.AnimationMixer(object);
   const animationActionsMap = new Map();
-  let previousAction;
   let activeAction;
-  let activeLoop;
   let clipStartTime = 0;
   let animationMixerFinishedCallback;
   let positionMap = new Map();
@@ -22,7 +20,6 @@ export const Animation = ({
     clipNames.forEach(actionName => {
       let AnimationClip = animObj;
       if (animObj.name.indexOf(actionName) !== -1) {
-
         if (actionName === 'walk_loop') {
           AnimationClip.tracks = AnimationClip.tracks.map(track => {
             if (track.name !== 'TrajectorySHJnt.position') return track;
@@ -37,7 +34,7 @@ export const Animation = ({
     });
   });
 
-  //console.log('positionMap', positionMap);
+  position.initTracks(positionMap);
 
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
@@ -47,10 +44,9 @@ export const Animation = ({
 
   const playClipAction = (clipName) => {
     positionFlag = 0;
-    previousAction?.stop();
     activeAction = animationActionsMap.get(clipName);
     if (clipName === 'walk_loop') {
-      position.setTrack(positionMap.get('walk_loop'));
+      position.playTrack(clipName);
       positionFlag = 1;
     }
     activeAction
@@ -60,7 +56,6 @@ export const Animation = ({
       .setLoop(THREE.LoopOnce)
       .play();
       clipStartTime = Date.now();
-    previousAction = activeAction;
   }
 
 

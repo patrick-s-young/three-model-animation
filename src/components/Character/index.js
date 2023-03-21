@@ -4,7 +4,6 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../Animation';
 import { Rotation } from '../Rotation';
-import { Translation } from '../Translation';
 import { ScriptPlayer } from '../ScriptPlayer';
 
 
@@ -23,8 +22,6 @@ export function Character({
   let animation;
   // ROTATION HANDLER
   let rotation = Rotation({ mesh, defaultRotation: 0 });
-  // TRANSLATION HANDLER
-  let translation = Translation({ mesh });
   // SCRIPT PLAYER
   let scriptPlayer;
 
@@ -58,13 +55,6 @@ export function Character({
         scriptPlayer.resetRotateFlag()
       }
     }
-    // CHECK FOR NEW TRANSLATION TRACKS
-    if (scriptPlayer?.timelineFlag === 1) {
-        translation.setTimeline(scriptPlayer.timeline);
-        scriptPlayer.startTimeline();
-    }
-    // UPDATE TRANSLATION
-    if (scriptPlayer?.timelineFlag === 2) translation.update({ yRotation: rotation.y })
   }
 
 

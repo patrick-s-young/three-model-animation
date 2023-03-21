@@ -1,13 +1,10 @@
 
-
 export const ScriptPlayer = ({
   animation,
   configs: { scripts, defaultScript },
 }) => {
   let scriptState = {};
   let rotateFlag = 0;
-  let timelineFlag = 0; // 1: start, 2: active, 0: inactive
-  let timeline;
  
   // create positionMap
   animation.setAnimationMixerFinishedCallback(clipActionFinished);
@@ -26,14 +23,8 @@ export const ScriptPlayer = ({
 
   function playNextClipActionInScript () {
     if (scriptState.scriptName === undefined) { console.log('scriptState.scriptName === undefined'); return; }
-    timelineFlag = 0;
-    timeline = undefined
     const { clipIdx, clipNames } = scriptState;
-    const { clipName, timeline: newTimeline } = clipNames[clipIdx];
-    if (newTimeline !== undefined) {
-      timeline = newTimeline;
-      timelineFlag = 1;
-    }
+    const { clipName } = clipNames[clipIdx];
     animation.playClipAction(clipName); 
   }
 
@@ -47,10 +38,6 @@ export const ScriptPlayer = ({
 
   return {
     get rotateFlag() { return rotateFlag },
-    get timelineFlag() { return timelineFlag },
-    get timeline() { return timeline },
-    startTimeline: () => timelineFlag = 2,
-    resetRotateFlag: () => rotateFlag = 0,
-    resetTimelineFlag: () => timelineFlag = 0
+    resetRotateFlag: () => rotateFlag = 0
   }
 }
