@@ -4,7 +4,7 @@ const meshScaler = 0.1;
 export const Position = ({ mesh }) => {
   let activeTrackName;
   let startAnimationTime;
-  let accumulatedDistance
+  let accumulatedDistance;
   let times;
   let values;
   let positionMap;
@@ -33,6 +33,7 @@ export const Position = ({ mesh }) => {
       }
     }
   }
+
 
 
 // COMPUTE AND CACHE POSITION VECTOR

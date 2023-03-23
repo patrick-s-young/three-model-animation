@@ -2,7 +2,7 @@ const meshScaler = 0.1;
 export const CONFIGS = {
   CHARACTER: {
     name: 'cat',
-    assetPath: '/models/cat_model_2023.03.13f.fbx',
+    assetPath: '/models/cat_model_2023.03.13h.fbx',
     meshScaler
   },
   ANIMATION: {
@@ -25,12 +25,16 @@ export const CONFIGS = {
           {clipName: 'jump_2' }
         ],
       test: [
-        {clipName: 'walk_loop' }
+        {clipName: 'stand_to_walk' },
+        {clipName: 'walk_loop' },
+        {clipName: 'walk_to_stand'}
       ]
     },
-    clipTracks: [
-      { clipName: 'walk_loop', positionTrackName: 'TrajectorySHJnt.position' }
-    ],
+    extractTracks: {
+      walk_loop: { positionTrackName: 'TrajectorySHJnt.position' },
+      stand_to_walk: { positionTrackName: 'TrajectorySHJnt.position' },
+      walk_to_stand: { positionTrackName: 'TrajectorySHJnt.position' }
+    },
     clipNames: [
       // 'sneak_loop',
       // 'push_loop',
