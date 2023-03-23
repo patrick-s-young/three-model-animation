@@ -4,7 +4,8 @@ import { Position } from '../Position';
 export const Animation = ({
   mesh,
   object,
-  clipNames
+  clipNames,
+  extractTracks
   }) => {
   const animationMixer = new THREE.AnimationMixer(object);
   const animationActionsMap = new Map();
@@ -20,19 +21,27 @@ export const Animation = ({
     clipNames.forEach(actionName => {
       let AnimationClip = animObj;
       if (animObj.name.indexOf(actionName) !== -1) {
-        if (actionName === 'walk_loop') {
-          AnimationClip.tracks = AnimationClip.tracks.map(track => {
-            if (track.name !== 'TrajectorySHJnt.position') return track;
-            const { times, values } = track;
-            positionMap.set('walk_loop', {times, values});
-            track.values = track.values.map(value => 0)
-            return track;
-          })
-        }
+        AnimationClip = extractAnimationTrack(AnimationClip, actionName);
         animationActionsMap.set(actionName, animationMixer.clipAction(AnimationClip));
       }
     });
   });
+
+  function extractAnimationTrack(animationClip, actionName) {
+    if (extractTracks[actionName] === undefined) return animationClip;
+    const { positionTrackName } = extractTracks[actionName];
+
+    animationClip.tracks = animationClip.tracks.map(track => {
+        if (track.name !== positionTrackName) return track;
+        const { times, values } = track;
+        positionMap.set(actionName, {times, values});
+        track.values = track.values.map(value => 0)
+        return track;
+      })
+    return animationClip;
+  }
+
+console.log('positionMap', positionMap)
 
   position.initTracks(positionMap);
 
@@ -44,8 +53,9 @@ export const Animation = ({
 
   const playClipAction = (clipName) => {
     positionFlag = 0;
+    activeAction?.stop();
     activeAction = animationActionsMap.get(clipName);
-    if (clipName === 'walk_loop') {
+    if (extractTracks[clipName] !== undefined) {
       position.playTrack(clipName);
       positionFlag = 1;
     }

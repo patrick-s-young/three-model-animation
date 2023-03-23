@@ -33,7 +33,12 @@ export function Character({
     object.position.set(0, 0, 0);
     mesh.add(object);
     console.log('object', object)
-    animation = Animation({ mesh, object, clipNames: ANIMATION_CONFIGS.clipNames });
+    animation = Animation({
+       mesh, 
+       object, 
+       clipNames: ANIMATION_CONFIGS.clipNames,
+      extractTracks: ANIMATION_CONFIGS.extractTracks 
+    });
     scriptPlayer = ScriptPlayer({ 
       object, 
       animation: animation,
