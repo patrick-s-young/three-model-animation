@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Position } from '../Position';
+import { Quaternion } from '../Quaternion';
 
 export const Animation = ({
   mesh,
@@ -12,9 +13,12 @@ export const Animation = ({
   let activeAction;
   let clipStartTime = 0;
   let animationMixerFinishedCallback;
-  let positionMap = new Map();
+  const positionMap = new Map();
   let position = Position({ mesh });
   let positionFlag = 0;
+  const quaternionMap = new Map();
+  const quaternion = Quaternion({ mesh });
+  let quaternionFlag = 0;
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
   object.animations.forEach(animObj => {
@@ -29,21 +33,25 @@ export const Animation = ({
 
   function extractAnimationTrack(animationClip, actionName) {
     if (extractTracks[actionName] === undefined) return animationClip;
-    const { positionTrackName } = extractTracks[actionName];
-
+    const { positionTrackName, quaternionTrackName } = extractTracks[actionName];
     animationClip.tracks = animationClip.tracks.map(track => {
-        if (track.name !== positionTrackName) return track;
-        const { times, values } = track;
-        positionMap.set(actionName, {times, values});
-        track.values = track.values.map(value => 0)
+        const { name, times, values } = track;
+        if (name === positionTrackName) {
+          positionMap.set(actionName, {times, values});
+          track.values = track.values.map(value => 0);
+        }
+        if (name === quaternionTrackName) {
+          quaternionMap.set(actionName, {times, values});
+          track.values = track.values.map(value => 0);
+        }
         return track;
-      })
+      });
     return animationClip;
   }
 
-console.log('positionMap', positionMap)
 
   position.initTracks(positionMap);
+  quaternion.initTracks(quaternionMap);
 
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
@@ -53,11 +61,19 @@ console.log('positionMap', positionMap)
 
   const playClipAction = (clipName) => {
     positionFlag = 0;
+    quaternionFlag = 0;
     activeAction?.stop();
     activeAction = animationActionsMap.get(clipName);
     if (extractTracks[clipName] !== undefined) {
-      position.playTrack(clipName);
-      positionFlag = 1;
+      const { positionTrackName, quaternionTrackName } = extractTracks[clipName];
+      if (positionTrackName !== undefined) {
+        position.playTrack(clipName);
+        positionFlag = 1;
+      }
+      if (quaternionTrackName !== undefined) {
+        quaternion.playTrack(clipName);
+        quaternionFlag = 1;
+      }
     }
     activeAction
       .reset()
@@ -71,7 +87,8 @@ console.log('positionMap', positionMap)
 
   const update = ({ deltaSeconds, yRotation }) => {
     animationMixer.update(deltaSeconds);
-    if (positionFlag === 1) position.update({ yRotation });
+    if (positionFlag === 1) position.update({ yRotation: quaternion.yRadians });
+    if (quaternionFlag === 1) quaternion.update();
   }
   
   return {

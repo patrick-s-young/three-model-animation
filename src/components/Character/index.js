@@ -52,14 +52,6 @@ export function Character({
     if (mesh.visible === false) return;
     // UPDATE MIXER
     animation?.update({ deltaSeconds, yRotation: rotation.y});
-    // UPDATE ROTATION
-    if (scriptPlayer?.rotateFlag !== 0) {
-      const clipTime = Date.now() - animation?.clipStartTime;
-      if (clipTime > 1) { 
-        rotation.y = scriptPlayer.rotateFlag;
-        scriptPlayer.resetRotateFlag()
-      }
-    }
   }
 
 
