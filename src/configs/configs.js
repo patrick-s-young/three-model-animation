@@ -27,13 +27,18 @@ export const CONFIGS = {
       test: [
         {clipName: 'stand_to_walk' },
         {clipName: 'walk_loop' },
-        {clipName: 'walk_to_stand'}
+        {clipName: 'walk_to_stand'},
+        {clipName: 'turn_right_45'}
       ]
     },
     extractTracks: {
       walk_loop: { positionTrackName: 'TrajectorySHJnt.position' },
       stand_to_walk: { positionTrackName: 'TrajectorySHJnt.position' },
-      walk_to_stand: { positionTrackName: 'TrajectorySHJnt.position' }
+      walk_to_stand: { positionTrackName: 'TrajectorySHJnt.position' },
+      turn_right_180: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
+      turn_right_90: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
+      turn_right_45: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
+    //  turn_left_45: { quaternionTrackName: 'TrajectorySHJnt.quaternion'}
     },
     clipNames: [
       // 'sneak_loop',
@@ -89,10 +94,10 @@ export const CONFIGS = {
       // 'idle_stand_clean_loop',
       // 'turn_left_180',
       // 'turn_left_90',
-      // 'turn_right_45',
+      'turn_right_45',
        'turn_right_90',
-      // 'turn_right_180',
-      // 'turn_left_45',
+       'turn_right_180',
+      'turn_left_45',
       // STAND TO TROT
      // 'stand_to_trot',
       // STAND TO WALK
