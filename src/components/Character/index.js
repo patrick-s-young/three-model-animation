@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../Animation';
-import { Rotation } from '../Rotation';
 import { ScriptPlayer } from '../ScriptPlayer';
 
 
@@ -17,11 +16,9 @@ export function Character({
   // MESH
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
-  mesh.visible = true;
+  mesh.visible = false;
   // ANIMATION HANDLER
   let animation;
-  // ROTATION HANDLER
-  let rotation = Rotation({ mesh, defaultRotation: 0 });
   // SCRIPT PLAYER
   let scriptPlayer;
 
@@ -32,7 +29,6 @@ export function Character({
     object.traverse((node) => { if (node.isMesh) node.castShadow = true });
     object.position.set(0, 0, 0);
     mesh.add(object);
-    console.log('object', object)
     animation = Animation({
        mesh, 
        object, 
@@ -51,7 +47,7 @@ export function Character({
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
     // UPDATE MIXER
-    animation?.update({ deltaSeconds, yRotation: rotation.y});
+    animation?.update({ deltaSeconds });
   }
 
 

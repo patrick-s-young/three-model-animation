@@ -5,6 +5,7 @@ import * as THREE from 'three';
 export const Position = ({ mesh }) => {
   let activeTrackName;
   let startAnimationTime;
+  let accumulatedAnimationTime;
   let accumulatedDistance;
   let times;
   let values;
@@ -33,20 +34,22 @@ export const Position = ({ mesh }) => {
   }
 
 // PLAY TRACK
-  const playTrack = (trackName) => {
+  const playTrack = ({ deltaSeconds, trackName }) => {
     if (positionMap.has(trackName) === false) return;
     activeTrackName = trackName;
     const track = positionMap.get(trackName);
     times = track.times;
     values = track.values;
-    startAnimationTime = Date.now();
+    startAnimationTime = deltaSeconds;
+    accumulatedAnimationTime = 0;
     accumulatedDistance = 0;
   }
 
 // UPDATE ACTIVE TRACK
-  const update = ({ yRotation }) => {
-    const timeOffset = (Date.now() - startAnimationTime) * 0.001;
-    for (let idx = 1; idx < times.length - 1; idx++) {
+  const update = ({ deltaSeconds, yRotation }) => {
+    accumulatedAnimationTime += deltaSeconds;
+    const timeOffset = accumulatedAnimationTime - startAnimationTime;
+    for (let idx = 1; idx < times.length; idx++) {
       if (times[idx - 1] < timeOffset && times[idx] > timeOffset) {
         const [x, y, z] = vectorInterpolant[activeTrackName].interpolate_(idx, times[idx - 1], timeOffset, times[idx]);
         const increment = z - accumulatedDistance;

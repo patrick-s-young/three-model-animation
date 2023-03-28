@@ -11,7 +11,6 @@ export const Animation = ({
   const animationMixer = new THREE.AnimationMixer(object);
   const animationActionsMap = new Map();
   let activeAction;
-  let clipStartTime = 0;
   let animationMixerFinishedCallback;
   const positionMap = new Map();
   let position = Position({ mesh });
@@ -19,6 +18,7 @@ export const Animation = ({
   const quaternionMap = new Map();
   const quaternion = Quaternion({ mesh });
   let quaternionFlag = 0;
+  let _deltaSeconds = 0;
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
   object.animations.forEach(animObj => {
@@ -60,6 +60,7 @@ export const Animation = ({
   }
 
   const playClipAction = (clipName) => {
+    mesh.visible = true;
     positionFlag = 0;
     quaternionFlag = 0;
     activeAction?.stop();
@@ -67,7 +68,7 @@ export const Animation = ({
     if (extractTracks[clipName] !== undefined) {
       const { positionTrackName, quaternionTrackName } = extractTracks[clipName];
       if (positionTrackName !== undefined) {
-        position.playTrack(clipName);
+        position.playTrack({ deltaSeconds: _deltaSeconds, trackName: clipName });
         positionFlag = 1;
       }
       if (quaternionTrackName !== undefined) {
@@ -81,18 +82,17 @@ export const Animation = ({
       .setEffectiveWeight(1)
       .setLoop(THREE.LoopOnce)
       .play();
-      clipStartTime = Date.now();
   }
 
 
-  const update = ({ deltaSeconds, yRotation }) => {
-    animationMixer.update(deltaSeconds);
-    if (positionFlag === 1) position.update({ yRotation: quaternion.yRadians });
+  const update = ({ deltaSeconds }) => {
+    _deltaSeconds = deltaSeconds;
+    animationMixer.update(_deltaSeconds);
+    if (positionFlag === 1) position.update({ deltaSeconds: _deltaSeconds, yRotation: quaternion.yRadians });
     if (quaternionFlag === 1) quaternion.update();
   }
   
   return {
-    get clipStartTime() { return clipStartTime },
     playClipAction,
     setAnimationMixerFinishedCallback: (callback) => setAnimationMixerFinishedCallback(callback),
     clipAction: (clipName) => animationMixer.clipAction(clipName),

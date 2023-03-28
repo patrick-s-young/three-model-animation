@@ -35,7 +35,7 @@ export const Quaternion = ({ mesh }) => {
 // UPDATE ACTIVE TRACK
 const update = () => {
   const timeOffset = (Date.now() - startAnimationTime) * 0.001;
-  for (let idx = 1; idx < times.length - 1; idx++) {
+  for (let idx = 1; idx < times.length; idx++) {
     if (times[idx - 1] < timeOffset && times[idx] > timeOffset) {
       const [x, y, z, w] = quaternionInterpolant[activeTrackName].interpolate_(idx, times[idx - 1], timeOffset, times[idx]);
       interpolatedQuat.set(x, y, z, w);
