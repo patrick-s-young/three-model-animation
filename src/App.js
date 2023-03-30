@@ -1,17 +1,17 @@
 // Three
 import * as THREE from 'three';
 // Scene
-import { Scene } from './components/Scene';
-import { Camera } from './components/Camera';
-import { Lights } from './components/Lights';
+import { Scene } from './scene/Scene';
+import { Camera } from './cameras/Camera';
+import { Lights } from './lights/Lights';
 // GLTF
-import { Character } from './components/Character';
+import { AnimatedModel } from './models/AnimatedModel';
 // Mesh
-import { Floor } from './components/Floor';
+import { Floor } from './models/Floor';
 // Renderer
-import { Renderer } from './components/Renderer';
+import { Renderer } from './renderer/Renderer';
 // Character & Animation configs
-import { CONFIGS } from './configs/configs';
+import { CONFIGS } from './configs/Configs';
 // Helpers
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // Styles
@@ -27,7 +27,7 @@ export const App = () => {
   const lights = Lights();
   scene.add(lights.getLights());
   // GLTF
-  const cat = Character(CONFIGS.CHARACTER, CONFIGS.ANIMATION, onCharacterInit);
+  const cat = AnimatedModel(CONFIGS.CHARACTER, CONFIGS.ANIMATION, onAnimatedModelInit);
   scene.add(cat.mesh);
   // MESH
   const floor = Floor();
@@ -43,8 +43,8 @@ export const App = () => {
 
   renderer.setAnimationLoop(animationLoopCallback);
 
-  function onCharacterInit() {
-    console.log('character initialized');
+  function onAnimatedModelInit() {
+    console.log('AnimatedModel initialized');
   }
 
   // RENDER LOOP

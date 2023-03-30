@@ -2,29 +2,13 @@ const meshScaler = 0.1;
 export const CONFIGS = {
   CHARACTER: {
     name: 'cat',
-    assetPath: '/models/cat_model_2023.03.13h.fbx',
+    assetPath: '/models/cat/cat_model_2023.03.13h.fbx',
     meshScaler
   },
   ANIMATION: {
-    defaultScript: 'test',
+    defaultScript: 'demo',
     scripts: {
-      turn_left: 
-        [
-          {clipName: 'turn_left_90', rotate: Math.PI/2 },
-          {clipName: 'idle_stand_loop' },
-        ],
-      sit_and_clean: 
-        [
-          {clipName: 'stand_to_sit', rotate: 0 },
-          {clipName: 'idle_sit_clean_loop', rotate: 0 },
-          {clipName: 'sit_to_stand', rotate: 0 }
-        ],
-      jump_high:
-        [
-          {clipName: 'stand_to_jump_high_ready' },
-          {clipName: 'jump_2' }
-        ],
-      test: [
+      demo: [
         {clipName: 'turn_right_45'},
         {clipName: 'stand_to_walk' },
         {clipName: 'walk_loop' },

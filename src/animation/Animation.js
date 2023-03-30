@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { Position } from '../Position';
-import { Quaternion } from '../Quaternion';
+import { Position } from './Position';
+import { Quaternion } from './Quaternion';
 
 export const Animation = ({
   mesh,

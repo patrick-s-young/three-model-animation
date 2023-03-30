@@ -2,11 +2,11 @@
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
-import { Animation } from '../Animation';
-import { ScriptPlayer } from '../ScriptPlayer';
+import { Animation } from '../animation/Animation';
+import { ScriptPlayer } from '../animation/ScriptPlayer';
 
 
-export function Character({ 
+export function AnimatedModel({ 
   assetPath, 
   meshScaler }, 
   ANIMATION_CONFIGS,

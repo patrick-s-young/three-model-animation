@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export function Floor() {
   const loader = new THREE.TextureLoader();
-  const texture = loader.load('/textures/checkerboard.png');
+  const texture = loader.load('/models/floor/checkerboard.png');
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.x = texture.repeat.y = 40;
@@ -19,7 +19,7 @@ export function Floor() {
   mesh.rotateX(-Math.PI / 2);
   mesh.receiveShadow = true;
 
-return {
-  get mesh() { return mesh }
-}
+  return {
+    get mesh() { return mesh }
+  }
 }
