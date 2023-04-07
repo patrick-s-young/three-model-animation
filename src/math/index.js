@@ -1,0 +1,1 @@
+export { getYAxisDirectionVector } from './getDirectionVectorFromAxisRotation';
