@@ -12,10 +12,9 @@ export const CONFIGS = {
         {clipName: 'turn_right_45'},
         {clipName: 'stand_to_walk' },
         {clipName: 'walk_loop' },
-        {clipName: 'walk_loop' },
-        {clipName: 'walk_to_stand'},
-        {clipName: 'turn_right_90'},
-        {clipName: 'stand_to_walk' },
+       {clipName: 'walk_to_stand'},
+       {clipName: 'turn_right_90'},
+       {clipName: 'stand_to_walk' },
         {clipName: 'walk_loop' },
         {clipName: 'walk_to_stand'}
       ]

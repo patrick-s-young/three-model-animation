@@ -1,7 +1,10 @@
+// Three
 import * as THREE from 'three';
-import { Position } from './Position';
-import { Quaternion } from './Quaternion';
+// Animation in world space
+import { AnimationWorld } from './AnimationWorld';
 
+//////////
+// BEGIN
 export const Animation = ({
   mesh,
   object,
@@ -13,12 +16,11 @@ export const Animation = ({
   let activeAction;
   let animationMixerFinishedCallback;
   const positionMap = new Map();
-  let position = Position({ mesh });
   let positionFlag = 0;
   const quaternionMap = new Map();
-  const quaternion = Quaternion({ mesh });
   let quaternionFlag = 0;
   let _deltaSeconds = 0;
+  const animationWorld = AnimationWorld({ worldMesh: mesh });
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
   object.animations.forEach(animObj => {
@@ -29,7 +31,10 @@ export const Animation = ({
         animationActionsMap.set(actionName, animationMixer.clipAction(AnimationClip));
       }
     });
+
   });
+
+  animationWorld.initTracks({ worldMesh: mesh, quaternionMap, positionMap });
 
   function extractAnimationTrack(animationClip, actionName) {
     if (extractTracks[actionName] === undefined) return animationClip;
@@ -49,10 +54,6 @@ export const Animation = ({
     return animationClip;
   }
 
-
-  position.initTracks(positionMap);
-  quaternion.initTracks(quaternionMap);
-
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
     animationMixer.addEventListener('finished', newAnimationMixerFinishedCallback);
@@ -65,17 +66,7 @@ export const Animation = ({
     quaternionFlag = 0;
     activeAction?.stop();
     activeAction = animationActionsMap.get(clipName);
-    if (extractTracks[clipName] !== undefined) {
-      const { positionTrackName, quaternionTrackName } = extractTracks[clipName];
-      if (positionTrackName !== undefined) {
-        position.playTrack({ deltaSeconds: _deltaSeconds, trackName: clipName });
-        positionFlag = 1;
-      }
-      if (quaternionTrackName !== undefined) {
-        quaternion.playTrack(clipName);
-        quaternionFlag = 1;
-      }
-    }
+    animationWorld.playClipAction({ clipName, deltaSeconds: _deltaSeconds });
     activeAction
       .reset()
       .setEffectiveTimeScale(1)
@@ -88,8 +79,7 @@ export const Animation = ({
   const update = ({ deltaSeconds }) => {
     _deltaSeconds = deltaSeconds;
     animationMixer.update(_deltaSeconds);
-    if (positionFlag === 1) position.update({ deltaSeconds: _deltaSeconds, yRotation: quaternion.yRadians });
-    if (quaternionFlag === 1) quaternion.update();
+    animationWorld.update(_deltaSeconds);
   }
   
   return {
