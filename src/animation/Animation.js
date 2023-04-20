@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 // Animation in world space
 import { AnimationWorld } from './AnimationWorld';
+// Utils
+import { normalizeClipNames } from '../utils/normalizeClipNames';
 
 //////////
 // BEGIN
@@ -11,6 +13,12 @@ export const Animation = ({
   clipNames,
   extractTracks
   }) => {
+
+  normalizeClipNames({
+    object3D: object,
+    normalizedClipNames: clipNames
+  });
+
   const animationMixer = new THREE.AnimationMixer(object);
   const animationActionsMap = new Map();
   let activeAction;
@@ -26,7 +34,7 @@ export const Animation = ({
   object.animations.forEach(animObj => {
     clipNames.forEach(actionName => {
       let AnimationClip = animObj;
-      if (animObj.name.indexOf(actionName) !== -1) {
+      if (animObj.name === actionName) {
         AnimationClip = extractAnimationTrack(AnimationClip, actionName);
         animationActionsMap.set(actionName, animationMixer.clipAction(AnimationClip));
       }
