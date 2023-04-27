@@ -10,8 +10,7 @@ import { normalizeClipNames } from '../utils/normalizeClipNames';
 export const Animation = ({
   mesh,
   object,
-  clipNames,
-  extractTracks
+  clipNames
   }) => {
 
   normalizeClipNames({
@@ -24,43 +23,27 @@ export const Animation = ({
   let activeAction;
   let animationMixerFinishedCallback;
   const positionMap = new Map();
-  let positionFlag = 0;
   const quaternionMap = new Map();
-  let quaternionFlag = 0;
   let _deltaSeconds = 0;
   const animationWorld = AnimationWorld({ worldMesh: mesh });
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
-  object.animations.forEach(animObj => {
-    clipNames.forEach(actionName => {
-      let AnimationClip = animObj;
-      if (animObj.name === actionName) {
-        AnimationClip = extractAnimationTrack(AnimationClip, actionName);
-        animationActionsMap.set(actionName, animationMixer.clipAction(AnimationClip));
-      }
-    });
-
+  object.animations.forEach(animClip => {
+     animClip.tracks = animClip.tracks.filter(track => {
+       const [name, type] = track.name.split('.');
+       if (name === 'TrajectorySHJnt') {
+         const { times, values } = track;
+         if (type === 'position') positionMap.set(animClip.name, {times, values});
+         if (type === 'quaternion') quaternionMap.set(animClip.name, {times, values});
+        return false;
+       }
+       return true;
+     });
+    animationActionsMap.set(animClip.name, animationMixer.clipAction(animClip));
   });
 
   animationWorld.initTracks({ worldMesh: mesh, quaternionMap, positionMap });
 
-  function extractAnimationTrack(animationClip, actionName) {
-    if (extractTracks[actionName] === undefined) return animationClip;
-    const { positionTrackName, quaternionTrackName } = extractTracks[actionName];
-    animationClip.tracks = animationClip.tracks.map(track => {
-        const { name, times, values } = track;
-        if (name === positionTrackName) {
-          positionMap.set(actionName, {times, values});
-          track.values = track.values.map(value => 0);
-        }
-        if (name === quaternionTrackName) {
-          quaternionMap.set(actionName, {times, values});
-          track.values = track.values.map(value => 0);
-        }
-        return track;
-      });
-    return animationClip;
-  }
 
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
@@ -69,9 +52,8 @@ export const Animation = ({
   }
 
   const playClipAction = (clipName) => {
+   
     mesh.visible = true;
-    positionFlag = 0;
-    quaternionFlag = 0;
     activeAction?.stop();
     activeAction = animationActionsMap.get(clipName);
     animationWorld.playClipAction({ clipName, deltaSeconds: _deltaSeconds });

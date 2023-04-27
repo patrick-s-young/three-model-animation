@@ -32,8 +32,7 @@ export function AnimatedModel({
     animation = Animation({
        mesh, 
        object, 
-       clipNames: ANIMATION_CONFIGS.clipNames,
-      extractTracks: ANIMATION_CONFIGS.extractTracks 
+       clipNames: ANIMATION_CONFIGS.clipNames
     });
     scriptPlayer = ScriptPlayer({ 
       object, 
