@@ -11,7 +11,7 @@ import { Floor } from './models/Floor';
 // Renderer
 import { Renderer } from './renderer/Renderer';
 // Character & Animation configs
-import { CONFIGS } from './configs/Configs';
+import { CONFIGS } from './configs/configs';
 // Helpers
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // Styles
@@ -41,10 +41,10 @@ export const App = () => {
   controls.target.set(0, 0, 0);
   controls.update();
 
-  renderer.setAnimationLoop(animationLoopCallback);
+
 
   function onAnimatedModelInit() {
-    console.log('AnimatedModel initialized');
+    renderer.setAnimationLoop(animationLoopCallback);
   }
 
   // RENDER LOOP

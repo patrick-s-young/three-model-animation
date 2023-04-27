@@ -10,7 +10,7 @@ export const CONFIGS = {
     scripts: {
       demo: [
         {clipName: 'turn_right_45'},
-        {clipName: 'stand_to_walk' },
+         {clipName: 'stand_to_walk' },
         {clipName: 'walk_loop' },
        {clipName: 'walk_to_stand'},
        {clipName: 'turn_right_90'},
@@ -19,23 +19,14 @@ export const CONFIGS = {
         {clipName: 'walk_to_stand'}
       ]
     },
-    extractTracks: {
-      stand_to_walk: { positionTrackName: 'TrajectorySHJnt.position' },
-      walk_to_stand: { positionTrackName: 'TrajectorySHJnt.position' },
-      turn_right_180: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
-      turn_right_90: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
-      turn_right_45: { quaternionTrackName: 'TrajectorySHJnt.quaternion'},
-      walk_loop: { positionTrackName: 'TrajectorySHJnt.position' },
-      turn_left_45: { quaternionTrackName: 'TrajectorySHJnt.quaternion'}
-    },
     clipNames: [
-      // 'sneak_loop',
+      //  'sneak_loop',
       // 'push_loop',
-      // 'pull_loop',
+      //  'pull_loop',
       
       ///////////////////
       // CROUCH TO CROUCH
-     // 'idle_crouch_loop',
+      //'idle_crouch_loop',
       // CROUCH TO STAND
      // 'crouch_to_stand', 
 
@@ -45,20 +36,20 @@ export const CONFIGS = {
 
       //////////////////////
       // JUMP_READY TO STAND
-    //  'jump_1',
-     // 'jump_2',
+   //   'jump_1',
+    //  'jump_2',
 
       /////////////
       // LAY TO LAY
-      //'idle_lay_down_loop',
+    //  'idle_lay_down_loop',
 
       //////////////
       // RUN TO RUN
-     // 'run_loop', 
+    //  'run_loop', 
 
       /////////////
       // SIT TO SIT
-      //'idle_sit_loop',
+    //  'idle_sit_loop',
      // 'idle_sit_clean_loop',
       // SIT TO STAND
      // 'sit_to_stand',
@@ -71,17 +62,17 @@ export const CONFIGS = {
       // STAND TO CROUCH
      // 'stand_to_crouch',
       // STAND TO JUMP_READY
-     // 'stand_to_jump_high_ready',
+    //  'stand_to_jump_high_ready',
       // STAND TO RUN
      // 'stand_to_run', // need 'run_to_stand'
       // STAND TO SIT
-     // 'stand_to_sit',
+    // 'stand_to_sit',
       // STAND TO STAND
-      // 'attack_loop',
-      // 'idle_stand_loop',
-      // 'idle_stand_clean_loop',
-      // 'turn_left_180',
-      // 'turn_left_90',
+      //'attack_loop',
+      'idle_stand_loop',
+      'idle_stand_clean_loop',
+      'turn_left_180',
+      'turn_left_90',
       'turn_right_45',
       'turn_right_90',
       'turn_right_180',
@@ -94,7 +85,7 @@ export const CONFIGS = {
 
       ///////////////
       // TROT TO TROT
-     // 'trot_loop',
+      //'trot_loop',
 
       /////////////////
       // WALK TO STAND

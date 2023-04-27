@@ -13,7 +13,7 @@ export const AnimationWorld = ({
   // Currently playing
   let activeTrackName = undefined;
   // Clip times
-  let clipTrackTimes = [];
+  let positionTrackTimes = [];
   let accumulatedAnimationTime = 0;
   let startAnimationTime = 0;
   // Position
@@ -22,6 +22,7 @@ export const AnimationWorld = ({
   let accumulatedDistance = 0;
   let positionMap;
   // Quaterion
+  let quaternionTrackTimes = [];
   let quaternionFlag;
   let quaternionMap;
   let yRadians = 0;
@@ -37,53 +38,53 @@ export const AnimationWorld = ({
   }
 
   const playClipAction = ({ clipName, deltaSeconds }) => {
-    positionFlag = 0;
-    quaternionFlag = 0;
-    if (positionMap.has(clipName) === false && quaternionMap.has(clipName) === false) return;
+    //positionFlag = 0;
+   // quaternionFlag = 0;
+   // if (positionMap.has(clipName) === false && quaternionMap.has(clipName) === false) return;
     activeTrackName = clipName;
     startAnimationTime = deltaSeconds;
     accumulatedAnimationTime = 0;
     // If clip has world position tracks
-    if (positionMap.has(clipName) === true) {
-      const { times, values } = positionMap.get(clipName);
-      clipTrackTimes = times;
+   // if (positionMap.has(clipName) === true) {
+      //const { times } = positionMap.get(clipName);
+      positionTrackTimes = positionMap.get(clipName).times;
       accumulatedDistance = 0;
-      positionFlag = 1;
-    }
-    // If clip has world quaternion tracks
-    if (quaternionMap.has(clipName) === true) {
-      const { times, values } = quaternionMap.get(clipName);
-      clipTrackTimes = times;
+
+      quaternionTrackTimes = quaternionMap.get(clipName).times;
       startQuat.copy(worldMesh.quaternion);
-      quaternionFlag = 1;
-    }
+
+    
   }
 
 
   const update = (deltaSeconds) => {
-    if (positionFlag < 1 && quaternionFlag < 1) return;
+  //  if (positionFlag < 1 && quaternionFlag < 1) return;
     accumulatedAnimationTime += deltaSeconds;
     const timeOffset = accumulatedAnimationTime - startAnimationTime;
-    for (let idx = 1, nTracks = clipTrackTimes.length; idx < nTracks; idx++) {
-      if (clipTrackTimes[idx - 1] < timeOffset && clipTrackTimes[idx] > timeOffset) {
-      if (positionFlag === 1) {
-        const [x, y, z] = vectorInterpolant[activeTrackName].interpolate_(idx, clipTrackTimes[idx - 1], timeOffset, clipTrackTimes[idx]);
-        const increment = z - accumulatedDistance;
-        accumulatedDistance += increment;
-        const { x: xDirection, _ , z:zDirection } = getYAxisDirectionVector(yRadians);
-        worldMesh.position.x += xDirection * increment;
-        worldMesh.position.z += zDirection * increment * -1;
+    // position track
+    for (let idx = 1, nTracks = positionTrackTimes.length; idx < nTracks; idx++) {
+      if (positionTrackTimes[idx - 1] < timeOffset && positionTrackTimes[idx] > timeOffset) {
+          const [x, y, z] = vectorInterpolant[activeTrackName].interpolate_(idx, positionTrackTimes[idx - 1], timeOffset, positionTrackTimes[idx]);
+          const increment = z - accumulatedDistance;
+          accumulatedDistance += increment;
+          const { x: xDirection, _ , z:zDirection } = getYAxisDirectionVector(yRadians);
+          worldMesh.position.x += xDirection * increment;
+          worldMesh.position.z += zDirection * increment * -1;
+          break;
       }
-      if (quaternionFlag === 1) {
-        const [x, y, z, w] = quaternionInterpolant[activeTrackName].interpolate_(idx, clipTrackTimes[idx - 1], timeOffset, clipTrackTimes[idx]);
+    }
+    // quaternion track
+    for (let idx = 1, nTracks = quaternionTrackTimes.length; idx < nTracks; idx++) {
+      if (quaternionTrackTimes[idx - 1] < timeOffset && quaternionTrackTimes[idx] > timeOffset) {
+        const [x, y, z, w] = quaternionInterpolant[activeTrackName].interpolate_(idx, quaternionTrackTimes[idx - 1], timeOffset, quaternionTrackTimes[idx]);
         interpolatedQuat.set(x, y, z, w);
         startPlusInterpolatedQuat.multiplyQuaternions(startQuat, interpolatedQuat);
         worldMesh.quaternion.copy(startPlusInterpolatedQuat);
         _setYRotation();
+        break;
       }
-      break;
     }
-    }
+    
   }
 
 
