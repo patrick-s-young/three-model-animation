@@ -29,22 +29,28 @@ export const Animation = ({
 
   // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
   object.animations.forEach(animClip => {
-     animClip.tracks = animClip.tracks.filter(track => {
-       const [name, type] = track.name.split('.');
-       if (name === 'TrajectorySHJnt') {
-         const { times, values } = track;
-         if (type === 'position') positionMap.set(animClip.name, {times, values});
-         if (type === 'quaternion') quaternionMap.set(animClip.name, {times, values});
-        return false;
-       }
-       return true;
-     });
+    let worldPositionKeyFrameTrack;
+    animClip.tracks = animClip.tracks.filter(track => {
+      const [name, type] = track.name.split('.');
+      if (name === 'TrajectorySHJnt') {
+        const { times, values } = track;
+        if (type === 'position') {
+          positionMap.set(animClip.name, {times, values});
+          worldPositionKeyFrameTrack = new THREE.VectorKeyframeTrack('TrajectorySHJnt.position', [...times], new Array(values.length).fill(0));
+        }
+        if (type === 'quaternion') quaternionMap.set(animClip.name, {times, values});
+       return false;
+      }
+      return true;
+    });
+    animClip.tracks.push(worldPositionKeyFrameTrack)
     animationActionsMap.set(animClip.name, animationMixer.clipAction(animClip));
   });
 
+  // INIT WORLD ANIMATION ANCHOR
   animationWorld.initTracks({ worldMesh: mesh, quaternionMap, positionMap });
 
-
+  // SET ANIMATION MIXER CALLBACK
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
     animationMixer.removeEventListener('finished', animationMixerFinishedCallback);
     animationMixer.addEventListener('finished', newAnimationMixerFinishedCallback);
@@ -52,7 +58,6 @@ export const Animation = ({
   }
 
   const playClipAction = (clipName) => {
-   
     mesh.visible = true;
     activeAction?.stop();
     activeAction = animationActionsMap.get(clipName);
