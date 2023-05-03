@@ -17,13 +17,11 @@ export const AnimationWorld = ({
   let accumulatedAnimationTime = 0;
   let startAnimationTime = 0;
   // Position
-  let positionFlag;
   const vectorInterpolant = {};
   let accumulatedDistance = 0;
   let positionMap;
   // Quaterion
   let quaternionTrackTimes = [];
-  let quaternionFlag;
   let quaternionMap;
   let yRadians = 0;
   const quaternionInterpolant = {};
@@ -38,30 +36,19 @@ export const AnimationWorld = ({
   }
 
   const playClipAction = ({ clipName, deltaSeconds }) => {
-    //positionFlag = 0;
-   // quaternionFlag = 0;
-   // if (positionMap.has(clipName) === false && quaternionMap.has(clipName) === false) return;
     activeTrackName = clipName;
     startAnimationTime = deltaSeconds;
     accumulatedAnimationTime = 0;
-    // If clip has world position tracks
-   // if (positionMap.has(clipName) === true) {
-      //const { times } = positionMap.get(clipName);
-      positionTrackTimes = positionMap.get(clipName).times;
-      accumulatedDistance = 0;
-
-      quaternionTrackTimes = quaternionMap.get(clipName).times;
-      startQuat.copy(worldMesh.quaternion);
-
-    
+    positionTrackTimes = positionMap.get(clipName).times;
+    accumulatedDistance = 0;
+    quaternionTrackTimes = quaternionMap.get(clipName).times;
+    startQuat.copy(worldMesh.quaternion);
   }
 
 
   const update = (deltaSeconds) => {
-  //  if (positionFlag < 1 && quaternionFlag < 1) return;
     accumulatedAnimationTime += deltaSeconds;
     const timeOffset = accumulatedAnimationTime - startAnimationTime;
-    // position track
     for (let idx = 1, nTracks = positionTrackTimes.length; idx < nTracks; idx++) {
       if (positionTrackTimes[idx - 1] < timeOffset && positionTrackTimes[idx] > timeOffset) {
           const [x, y, z] = vectorInterpolant[activeTrackName].interpolate_(idx, positionTrackTimes[idx - 1], timeOffset, positionTrackTimes[idx]);
@@ -73,7 +60,6 @@ export const AnimationWorld = ({
           break;
       }
     }
-    // quaternion track
     for (let idx = 1, nTracks = quaternionTrackTimes.length; idx < nTracks; idx++) {
       if (quaternionTrackTimes[idx - 1] < timeOffset && quaternionTrackTimes[idx] > timeOffset) {
         const [x, y, z, w] = quaternionInterpolant[activeTrackName].interpolate_(idx, quaternionTrackTimes[idx - 1], timeOffset, quaternionTrackTimes[idx]);

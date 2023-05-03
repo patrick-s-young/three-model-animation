@@ -17,12 +17,18 @@ export function AnimatedModel({
   const mesh = new THREE.Group();
   mesh.matrixAutoUpdate = true;
   mesh.visible = false;
+  // MESH DEBUG
+  const geometry = new THREE.BoxGeometry( .2, .2, .2 ); 
+  const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+  const cube = new THREE.Mesh( geometry, material );
+  mesh.add(cube);
   // ANIMATION HANDLER
   let animation;
   // SCRIPT PLAYER
   let scriptPlayer;
 
-  
+
+
   // LOAD MODEL
   fbxLoader.load(assetPath, (object) => {
     object.scale.multiplyScalar(meshScaler)
