@@ -4,7 +4,8 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 // Components
 import { Animation } from '../animation/Animation';
 import { ScriptPlayer } from '../animation/ScriptPlayer';
-
+// Utils
+import { normalizeClipNames } from '../utils/normalizeClipNames';
 
 export function AnimatedModel({ 
   assetPath, 
@@ -34,11 +35,14 @@ export function AnimatedModel({
     object.scale.multiplyScalar(meshScaler)
     object.traverse((node) => { if (node.isMesh) node.castShadow = true });
     object.position.set(0, 0, 0);
+    normalizeClipNames({
+      object3D: object,
+      normalizedClipNames: ANIMATION_CONFIGS.clipNames
+    });
     mesh.add(object);
     animation = Animation({
        mesh, 
-       object, 
-       clipNames: ANIMATION_CONFIGS.clipNames
+       object
     });
     scriptPlayer = ScriptPlayer({ 
       object, 

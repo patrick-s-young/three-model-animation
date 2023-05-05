@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 // Math
 import { getYAxisDirectionVector } from '../math'; // TODO - add directory aliasing
+import { yAxisRotationFromQuaterion } from '../math/yAxisRotationFromQuaternion';
 
 const meshScaler = 0.1; // TODO - move to configs
 
@@ -45,12 +46,13 @@ export const AnimationWorld = ({
     startQuat.copy(worldMesh.quaternion);
   }
 
-
+//TODO - single loop for timeOffset
   const update = (deltaSeconds) => {
     accumulatedAnimationTime += deltaSeconds;
     const timeOffset = accumulatedAnimationTime - startAnimationTime;
     for (let idx = 1, nTracks = positionTrackTimes.length; idx < nTracks; idx++) {
       if (positionTrackTimes[idx - 1] < timeOffset && positionTrackTimes[idx] > timeOffset) {
+        //TODO - add vector, not just 'z'
           const [x, y, z] = vectorInterpolant[activeTrackName].interpolate_(idx, positionTrackTimes[idx - 1], timeOffset, positionTrackTimes[idx]);
           const increment = z - accumulatedDistance;
           accumulatedDistance += increment;
@@ -66,7 +68,8 @@ export const AnimationWorld = ({
         interpolatedQuat.set(x, y, z, w);
         startPlusInterpolatedQuat.multiplyQuaternions(startQuat, interpolatedQuat);
         worldMesh.quaternion.copy(startPlusInterpolatedQuat);
-        _setYRotation();
+       // _setYRotation();
+        yRadians = yAxisRotationFromQuaterion(worldMesh.quaternion);
         break;
       }
     }
@@ -94,18 +97,6 @@ export const AnimationWorld = ({
     }
   }
   
-  // TODO - move to math utils
-  function _setYRotation() {
-    const [x, yNow, z, w] = worldMesh.quaternion.toArray();
-      const angle = 2 * Math.acos(w);
-      let s;
-      if (1 - w * w < 0.000001) {
-        s = 1;
-      } else {
-        s = Math.sqrt(1 - w * w);
-      }
-      yRadians = yNow/s * angle;
-  }
 
   return {
     update,

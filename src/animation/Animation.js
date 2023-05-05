@@ -3,52 +3,26 @@ import * as THREE from 'three';
 // Animation in world space
 import { AnimationWorld } from './AnimationWorld';
 // Utils
-import { normalizeClipNames } from '../utils/normalizeClipNames';
+import { extractWorldTracks } from '../utils/extractWorldTrack';
 
 //////////
 // BEGIN
 export const Animation = ({
   mesh,
-  object,
-  clipNames
+  object
   }) => {
-
-  normalizeClipNames({
-    object3D: object,
-    normalizedClipNames: clipNames
-  });
-
   const animationMixer = new THREE.AnimationMixer(object);
   const animationActionsMap = new Map();
+  const animationWorld = AnimationWorld({ worldMesh: mesh });
+  const { positionMap, quaternionMap } = extractWorldTracks({ worldTrackName: 'TrajectorySHJnt', source: object });
   let activeAction;
   let animationMixerFinishedCallback;
-  const positionMap = new Map();
-  const quaternionMap = new Map();
   let _deltaSeconds = 0;
-  const animationWorld = AnimationWorld({ worldMesh: mesh });
 
-  // MAP ANIMATION NAMES TO SCRIPT CLIP NAMES
-  object.animations.forEach(animClip => {
-    let worldPositionKeyFrameTrack;
-    animClip.tracks = animClip.tracks.filter(track => {
-      const [name, type] = track.name.split('.');
-      if (name === 'TrajectorySHJnt') {
-        const { times, values } = track;
-        if (type === 'position') {
-          positionMap.set(animClip.name, {times, values});
-          worldPositionKeyFrameTrack = new THREE.VectorKeyframeTrack('TrajectorySHJnt.position', [...times], new Array(values.length).fill(0));
-        }
-        if (type === 'quaternion') quaternionMap.set(animClip.name, {times, values});
-       return false;
-      }
-      return true;
-    });
-    animClip.tracks.push(worldPositionKeyFrameTrack)
-    animationActionsMap.set(animClip.name, animationMixer.clipAction(animClip));
-  });
-
+  // MAP ANIMATION ACTIONS TO CLIP NAMES
+  object.animations.forEach(animClip => animationActionsMap.set(animClip.name, animationMixer.clipAction(animClip)));
   // INIT WORLD ANIMATION ANCHOR
-  animationWorld.initTracks({ worldMesh: mesh, quaternionMap, positionMap });
+  animationWorld.initTracks({ quaternionMap, positionMap });
 
   // SET ANIMATION MIXER CALLBACK
   const setAnimationMixerFinishedCallback = (newAnimationMixerFinishedCallback) => {
